@@ -20,16 +20,20 @@ public class Reservation extends SoftDeletableEntity {
     @GeneratedValue
     private long id;
 
+    @NonNull
     @Column(name = "created_date", nullable = false)
     private LocalDateTime createdDate;
 
+    @NonNull
     @Column(name = "reservation_start", nullable = false)
     private LocalDateTime reservationStart;
 
+    @NonNull
     @Column(name = "reservation_end", nullable = false)
     // TODO validate reservationStart < reservationEnd...
     private LocalDateTime reservationEnd;
 
+    @NonNull
     @Column(name = "game_type", nullable = false)
     private GameType gameType;
 
