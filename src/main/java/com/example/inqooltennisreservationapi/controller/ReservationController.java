@@ -1,7 +1,10 @@
 package com.example.inqooltennisreservationapi.controller;
 
+import com.example.inqooltennisreservationapi.controller.errors.InvalidParamsExceptions;
 import com.example.inqooltennisreservationapi.model.Court;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/reservations")
@@ -10,8 +13,15 @@ public class ReservationController {
     // TODO
 
     @GetMapping
-    public String listReservations() {
-        return "TODO list reservations\n";
+    public String listReservations(
+            @RequestParam(name = "courtId", required = false) Optional<Long> courtId,
+            @RequestParam(name = "phone", required = false) Optional<String> phone,
+            @RequestParam(name = "onlyFuture", defaultValue = "false") boolean onlyFuture
+    ) {
+        if (courtId.isEmpty() && phone.isEmpty()) {
+            throw new RuntimeException("Need to provide either courtId or phone number"); // TODO error handling
+        }
+        return String.format("TODO list reservations sorted by date created: courtId %s, phone %s, onlyFuture %s\n", courtId, phone, onlyFuture);
     }
 
     @PostMapping
