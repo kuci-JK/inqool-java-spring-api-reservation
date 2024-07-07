@@ -10,29 +10,29 @@ public class CourtController {
 
     // TODO
 
-    @GetMapping("/")
+    @GetMapping
     public String listCourts() {
-        return "TODO list courts";
+        return "TODO list courts\n";
     }
 
-    @PostMapping("/")
+    @PostMapping
     public String createCourt(@RequestBody Court court) {
-        return "TODO create court: " + court;
+        return "TODO create court: " + court + "\n";
     }
 
-    @GetMapping("/{courtId}")
+    @GetMapping("{courtId}")
     public String getCourt(@PathVariable Long courtId) {
-        return "TODO getCourt: " + courtId;
+        return "TODO getCourt: " + courtId + "\n";
     }
 
-    @PostMapping("/{courtId}")
+    @PutMapping("{courtId}")
     public String updateCourt(@PathVariable Long courtId) {
-        return "TODO updateCourt: " + courtId;
+        return "TODO updateCourt: " + courtId + "\n";
     }
 
-    @DeleteMapping("/{courtId}")
+    @DeleteMapping("{courtId}")
     public String deleteCourt(@PathVariable Long courtId) {
-        return "TODO deleteCourt: " + courtId;
+        return "TODO deleteCourt: " + courtId + "\n";
     }
 
 }
