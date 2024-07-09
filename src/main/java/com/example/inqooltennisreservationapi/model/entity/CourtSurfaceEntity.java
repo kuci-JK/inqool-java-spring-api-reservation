@@ -1,4 +1,4 @@
-package com.example.inqooltennisreservationapi.model;
+package com.example.inqooltennisreservationapi.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -12,7 +12,7 @@ import lombok.*;
 @ToString(callSuper = true)
 @Entity
 @Table(name = "court_surfaces")
-public class CourtSurface extends SoftDeletableEntity {
+public class CourtSurfaceEntity extends SoftDeletableEntity {
     @Id
     @GeneratedValue
     private long id;

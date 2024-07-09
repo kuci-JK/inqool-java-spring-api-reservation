@@ -1,5 +1,6 @@
-package com.example.inqooltennisreservationapi.model;
+package com.example.inqooltennisreservationapi.model.entity;
 
+import com.example.inqooltennisreservationapi.model.GameType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
 @ToString(callSuper = true)
 @Entity
 @Table(name = "reservations")
-public class Reservation extends SoftDeletableEntity {
+public class ReservationEntity extends SoftDeletableEntity {
 
     @Id
     @GeneratedValue
@@ -42,9 +43,9 @@ public class Reservation extends SoftDeletableEntity {
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "court_id", nullable = false)
-    private Court reservedCourt;
+    private CourtEntity reservedCourtEntity;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private UserEntity userEntity;
 }
