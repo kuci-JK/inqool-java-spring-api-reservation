@@ -8,8 +8,6 @@ public interface UserRepository {
 
     Optional<UserEntity> createUser(UserEntity userEntity);
 
-    Optional<UserEntity> updateUser(long id, UserEntity updatedUserEntity);
-
     Optional<UserEntity> deleteUser(long id);
 
     Optional<UserEntity> getUserById(long id);
