@@ -1,7 +1,6 @@
 package com.example.inqooltennisreservationapi.controller;
 
-import com.example.inqooltennisreservationapi.controller.errors.InvalidParamsExceptions;
-import com.example.inqooltennisreservationapi.model.Court;
+import com.example.inqooltennisreservationapi.model.entity.CourtEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -25,8 +24,8 @@ public class ReservationController {
     }
 
     @PostMapping
-    public String createReservation(@RequestBody Court court) {
-        return "TODO create reservation: " + court + "\n";
+    public String createReservation(@RequestBody CourtEntity courtEntity) {
+        return "TODO create reservation: " + courtEntity + "\n";
     }
 
     @GetMapping("{reservationId}")

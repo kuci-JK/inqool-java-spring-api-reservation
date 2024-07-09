@@ -1,8 +1,7 @@
 package com.example.inqooltennisreservationapi.controller;
 
-import com.example.inqooltennisreservationapi.model.Court;
+import com.example.inqooltennisreservationapi.model.entity.CourtEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.annotation.RequestScope;
 
 @RestController
 @RequestMapping("/courts")
@@ -16,8 +15,8 @@ public class CourtController {
     }
 
     @PostMapping
-    public String createCourt(@RequestBody Court court) {
-        return "TODO create court: " + court + "\n";
+    public String createCourt(@RequestBody CourtEntity courtEntity) {
+        return "TODO create court: " + courtEntity + "\n";
     }
 
     @GetMapping("{courtId}")
