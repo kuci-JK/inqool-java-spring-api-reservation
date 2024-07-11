@@ -4,8 +4,11 @@ import com.example.inqooltennisreservationapi.model.entity.ReservationEntity;
 import com.example.inqooltennisreservationapi.repository.ReservationRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,11 +57,6 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     }
 
     @Override
-    public List<ReservationEntity> listReservations() {
-        return entityManager.createQuery("from ReservationEntity", ReservationEntity.class).getResultList();
-    }
-
-    @Override
     public List<ReservationEntity> listReservations(long courId, boolean futureOnly) {
         return listReservations(Optional.of(courId), Optional.empty(), futureOnly);
     }
@@ -69,7 +67,27 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     }
 
     private List<ReservationEntity> listReservations(Optional<Long> courId, Optional<String> phone, boolean futureOnly) {
-        // TODO
-        return entityManager.createQuery("from ReservationEntity ", ReservationEntity.class).getResultList();
+        var builder = entityManager.getCriteriaBuilder();
+        var query = builder.createQuery(ReservationEntity.class);
+        var root = query.from(ReservationEntity.class);
+
+        List<Predicate> predicates = new ArrayList<>();
+        courId.ifPresent(aLong -> {
+            predicates.add(builder.equal(root.get("court").get("id"), aLong));
+            query.orderBy(builder.asc(root.get("createdDate")));
+        });
+        phone.ifPresent(s -> {
+            predicates.add(builder.equal(root.get("phone"), s));
+            query.orderBy(builder.asc(root.get("reservationStart")));
+        });
+        if (futureOnly) {
+            var now = LocalDateTime.now();
+            builder.greaterThan(root.get("reservationStart"), now);
+        }
+        query.where(predicates.toArray(new Predicate[0]));
+
+        query.select(root);
+
+        return entityManager.createQuery(query).getResultList();
     }
 }

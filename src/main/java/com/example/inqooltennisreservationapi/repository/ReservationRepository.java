@@ -15,8 +15,6 @@ public interface ReservationRepository {
 
     Optional<ReservationEntity> getReservationById(long id);
 
-    List<ReservationEntity> listReservations();
-
     List<ReservationEntity> listReservations(long courId, boolean futureOnly);
 
     List<ReservationEntity> listReservations(String phone, boolean futureOnly);
