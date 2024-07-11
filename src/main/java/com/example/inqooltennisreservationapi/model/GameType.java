@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum GameType {
-    SINGLES(1), DOUBLES(1.5);
+    SINGLES(1.0), DOUBLES(1.5);
 
     private final double priceMultiplier;
 }

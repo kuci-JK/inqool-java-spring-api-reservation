@@ -2,10 +2,10 @@ package com.example.inqooltennisreservationapi.model.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+@Getter
+@Setter
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,5 +13,5 @@ import lombok.NoArgsConstructor;
 public abstract class SoftDeletableEntity {
 
     @Column(name = "deleted", nullable = false)
-    private boolean isDeleted;
+    private boolean deleted;
 }
