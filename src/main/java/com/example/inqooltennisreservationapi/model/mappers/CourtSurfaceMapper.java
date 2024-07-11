@@ -2,7 +2,9 @@ package com.example.inqooltennisreservationapi.model.mappers;
 
 import com.example.inqooltennisreservationapi.model.api.CourtSurfaceDTOs;
 import com.example.inqooltennisreservationapi.model.entity.CourtSurfaceEntity;
+import org.springframework.stereotype.Component;
 
+@Component
 public class CourtSurfaceMapper {
 
     public CourtSurfaceDTOs.CourtSurfaceResponseDTO entityToResponseDto(CourtSurfaceEntity courtSurface) {
