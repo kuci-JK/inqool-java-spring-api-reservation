@@ -3,18 +3,18 @@ package com.example.inqooltennisreservationapi.model.api;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-public class SurfaceDTOs {
+public class CourtSurfaceDTOs {
 
     @Data
     @AllArgsConstructor
-    public static class SurfaceModifyParams {
+    public static class CourtSurfaceModifyParams {
         private String surfaceName;
         private double pricePerMinute;
     }
 
     @Data
     @AllArgsConstructor
-    public static class SurfaceResponseDTO {
+    public static class CourtSurfaceResponseDTO {
         private long id;
         private String surfaceName;
         private double pricePerMinute;

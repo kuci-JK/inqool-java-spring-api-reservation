@@ -17,7 +17,7 @@ public class CourtDTOs {
     public static class CourtResponseDTO {
         private long id;
         private String courtName;
-        private SurfaceDTOs.SurfaceResponseDTO surface;
+        private CourtSurfaceDTOs.CourtSurfaceResponseDTO surface;
         private boolean deleted;
     }
 
