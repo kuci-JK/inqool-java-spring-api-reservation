@@ -12,4 +12,6 @@ public interface UserRepository {
 
     Optional<UserEntity> getUserById(long id);
 
+    Optional<UserEntity> getUserByPhone(String phone);
+
 }
