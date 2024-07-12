@@ -1,11 +1,13 @@
 package com.example.inqooltennisreservationapi.model.mappers;
 
+import com.example.inqooltennisreservationapi.exceptions.EntityNotFoundException;
 import com.example.inqooltennisreservationapi.model.api.ReservationDTOs;
 import com.example.inqooltennisreservationapi.model.entity.CourtEntity;
 import com.example.inqooltennisreservationapi.model.entity.ReservationEntity;
 import com.example.inqooltennisreservationapi.model.entity.UserEntity;
 import com.example.inqooltennisreservationapi.repository.CourtRepository;
 import com.example.inqooltennisreservationapi.repository.UserRepository;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -30,20 +32,18 @@ public class ReservationMapper {
         this.userRepository = userRepository;
     }
 
-    private static ReservationEntity getReservationEntity(ReservationDTOs.ReservationModifyParams reservationModifyParams, Optional<CourtEntity> court, Optional<UserEntity> user) {
+    private static @NotNull ReservationEntity getReservationEntity(ReservationDTOs.@NotNull ReservationModifyParams reservationModifyParams, @NotNull CourtEntity court, @NotNull Optional<UserEntity> user) {
         var reservation = new ReservationEntity();
         reservation.setReservationStart(reservationModifyParams.getReservationStart());
         reservation.setReservationEnd(reservationModifyParams.getReservationEnd());
         reservation.setGameType(reservationModifyParams.getGameType());
-        reservation.setReservedCourtEntity(court.get());
+        reservation.setReservedCourtEntity(court);
         reservation.setUserEntity(user.orElse(new UserEntity(reservationModifyParams.getCustomer().getName(), reservationModifyParams.getCustomer().getPhone())));
         return reservation;
     }
 
-    public ReservationDTOs.ReservationResponseDTO entityToResponseDto(ReservationEntity reservation) {
-        if (reservation == null) {
-            return null; // TODO
-        }
+    public ReservationDTOs.ReservationResponseDTO entityToResponseDto(@NotNull ReservationEntity reservation) {
+
         return new ReservationDTOs.ReservationResponseDTO(
                 reservation.getId(),
                 reservation.getCreatedDate(),
@@ -55,14 +55,10 @@ public class ReservationMapper {
         );
     }
 
-    public ReservationEntity dtoToEntity(ReservationDTOs.ReservationModifyParams reservationModifyParams) {
-        if (reservationModifyParams == null) {
-            return null; // TODO
-        }
-
+    public ReservationEntity dtoToEntity(ReservationDTOs.@NotNull ReservationModifyParams reservationModifyParams) {
         var court = courtRepository.getCourtById(reservationModifyParams.getCourtId());
         if (court.isEmpty()) {
-            return null; // TODO maybe throw something
+            throw new EntityNotFoundException(String.format("Court id: %s not found", reservationModifyParams.getCourtId()));
         }
 
         var user = userRepository.getUserByPhone(reservationModifyParams.getCustomer().getPhone());
@@ -70,7 +66,7 @@ public class ReservationMapper {
             throw new RuntimeException("Invalid user data");
         }
 
-        return getReservationEntity(reservationModifyParams, court, user);
+        return getReservationEntity(reservationModifyParams, court.get(), user);
     }
 
 }
