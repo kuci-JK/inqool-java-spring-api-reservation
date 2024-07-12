@@ -1,37 +1,50 @@
 package com.example.inqooltennisreservationapi.controller;
 
-import com.example.inqooltennisreservationapi.model.entity.CourtEntity;
+import com.example.inqooltennisreservationapi.model.api.CourtDTOs;
+import com.example.inqooltennisreservationapi.service.CourtService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/courts")
+@Validated
 public class CourtController {
 
-    // TODO
+    CourtService service;
+
+    @Autowired
+    public CourtController(CourtService courtService) {
+        this.service = courtService;
+    }
 
     @GetMapping
-    public String listCourts() {
-        return "TODO list courts\n";
+    public List<CourtDTOs.CourtResponseDTO> listCourts() {
+        return service.getAllCourts();
     }
 
     @PostMapping
-    public String createCourt(@RequestBody CourtEntity courtEntity) {
-        return "TODO create court: " + courtEntity + "\n";
+    public CourtDTOs.CourtResponseDTO createCourt(@RequestBody @Valid CourtDTOs.CourtModifyParams params) {
+        return service.createCourt(params);
     }
 
     @GetMapping("{courtId}")
-    public String getCourt(@PathVariable Long courtId) {
-        return "TODO getCourt: " + courtId + "\n";
+    public CourtDTOs.CourtResponseDTO getCourt(@PathVariable @Positive long courtId) {
+        return service.getCourt(courtId);
     }
 
     @PutMapping("{courtId}")
-    public String updateCourt(@PathVariable Long courtId) {
-        return "TODO updateCourt: " + courtId + "\n";
+    public CourtDTOs.CourtResponseDTO updateCourt(@PathVariable @Positive long courtId, @RequestBody @Valid CourtDTOs.CourtModifyParams params) {
+        return service.editCourt(courtId, params);
     }
 
     @DeleteMapping("{courtId}")
-    public String deleteCourt(@PathVariable Long courtId) {
-        return "TODO deleteCourt: " + courtId + "\n";
+    public CourtDTOs.CourtResponseDTO deleteCourt(@PathVariable @Positive long courtId) {
+        return service.deleteCourt(courtId);
     }
 
 }
