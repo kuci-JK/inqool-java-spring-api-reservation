@@ -1,5 +1,6 @@
 package com.example.inqooltennisreservationapi.repository.impl;
 
+import com.example.inqooltennisreservationapi.model.entity.CourtEntity;
 import com.example.inqooltennisreservationapi.model.entity.ReservationEntity;
 import com.example.inqooltennisreservationapi.repository.ReservationRepository;
 import jakarta.persistence.EntityManager;
@@ -66,6 +67,30 @@ public class ReservationRepositoryImpl implements ReservationRepository {
         return listReservations(Optional.empty(), Optional.of(phone), futureOnly);
     }
 
+    @Override
+    public boolean overlapsExistingReservations(
+            long courtId, LocalDateTime from, LocalDateTime to, Optional<Long> ignoreReservationId
+    ) {
+        // TODO builder.parameter ?? to prevent sql injection?
+        var builder = entityManager.getCriteriaBuilder();
+        var query = builder.createQuery(ReservationEntity.class);
+        var root = query.from(ReservationEntity.class);
+
+        List<Predicate> predicates = new ArrayList<>();
+        predicates.add(entityNotDeletetPredicate(builder, root));
+
+        predicates.add(builder.equal(root.get("reservedCourtEntity").<CourtEntity>get("id"), courtId));
+        ignoreReservationId.ifPresent(id -> predicates.add(builder.notEqual(root.get("id"), id)));
+
+        predicates.add(builder.lessThan(root.get("reservationStart"), to));
+        predicates.add(builder.greaterThan(root.get("reservationEnd"), from));
+
+        query.where(predicates.toArray(new Predicate[0]));
+        query.select(root);
+
+        return entityManager.createQuery(query).getResultList().isEmpty();
+    }
+
     private List<ReservationEntity> listReservations(Optional<Long> courId, Optional<String> phone, boolean futureOnly) {
         var builder = entityManager.getCriteriaBuilder();
         var query = builder.createQuery(ReservationEntity.class);
@@ -75,7 +100,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
 
         List<Predicate> predicates = new ArrayList<>();
         courId.ifPresent(aLong -> {
-            predicates.add(builder.equal(root.get("court").get("id"), aLong));
+            predicates.add(builder.equal(root.get("reservedCourtEntity").get("id"), aLong));
             query.orderBy(builder.asc(root.get("createdDate")));
         });
         phone.ifPresent(s -> {

@@ -38,7 +38,12 @@ public class ReservationMapper {
         reservation.setReservationEnd(reservationModifyParams.getReservationEnd());
         reservation.setGameType(reservationModifyParams.getGameType());
         reservation.setReservedCourtEntity(court);
-        reservation.setUserEntity(user.orElse(new UserEntity(reservationModifyParams.getCustomer().getName(), reservationModifyParams.getCustomer().getPhone())));
+        reservation.setUserEntity(
+                user.orElse(new UserEntity(
+                        reservationModifyParams.getCustomer().getName(),
+                        reservationModifyParams.getCustomer().getPhone())
+                )
+        );
         return reservation;
     }
 
