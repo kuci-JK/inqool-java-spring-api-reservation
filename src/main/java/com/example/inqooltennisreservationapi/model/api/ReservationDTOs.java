@@ -1,5 +1,6 @@
 package com.example.inqooltennisreservationapi.model.api;
 
+import com.example.inqooltennisreservationapi.exceptions.InvalidRequestException;
 import com.example.inqooltennisreservationapi.model.GameType;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Future;
@@ -35,6 +36,12 @@ public class ReservationDTOs {
         @NotNull
         @Valid
         private UserDTOs.UserModifyParams customer;
+
+        public void validateDateInterval() {
+            if (reservationStart.isAfter(reservationEnd)) {
+                throw new InvalidRequestException("Reservation cannot start after it ends");
+            }
+        }
     }
 
     @Data
