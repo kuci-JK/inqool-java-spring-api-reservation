@@ -56,6 +56,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTOs.UserResponseDTO deleteUser(long id) {
+        // TODO need to delete user's reservations
         if (!userExists(id)) {
             throw new EntityNotFoundException("User does not exist");
         }
