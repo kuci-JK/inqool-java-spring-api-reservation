@@ -15,7 +15,7 @@ import java.util.List;
 @Validated
 public class CourtController {
 
-    CourtService service;
+    private final CourtService service;
 
     @Autowired
     public CourtController(CourtService courtService) {

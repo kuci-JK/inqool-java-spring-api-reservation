@@ -16,7 +16,7 @@ import java.util.List;
 @Validated
 public class SurfaceController {
 
-    CourtSurfaceService service;
+    private final CourtSurfaceService service;
 
     @Autowired
     public SurfaceController(CourtSurfaceService service) {
