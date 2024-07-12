@@ -1,5 +1,7 @@
 package com.example.inqooltennisreservationapi.service.impl;
 
+import com.example.inqooltennisreservationapi.exceptions.DatabaseException;
+import com.example.inqooltennisreservationapi.exceptions.EntityNotFoundException;
 import com.example.inqooltennisreservationapi.model.api.CourtDTOs;
 import com.example.inqooltennisreservationapi.model.mappers.CourtMapper;
 import com.example.inqooltennisreservationapi.repository.CourtRepository;
@@ -26,7 +28,7 @@ public class CourtServiceImpl implements CourtService {
     public CourtDTOs.CourtResponseDTO getCourt(long id) {
         var entity = courtRepository.getCourtById(id);
         if (entity.isEmpty()) {
-            throw new RuntimeException("Entity not found");
+            throw new EntityNotFoundException(String.format("Court id: %s not found", id));
         }
         return courtMapper.entityToResponseDto(entity.get());
     }
@@ -34,12 +36,10 @@ public class CourtServiceImpl implements CourtService {
     @Override
     public CourtDTOs.CourtResponseDTO createCourt(CourtDTOs.CourtModifyParams courtModifyParams) {
         var newEntity = courtMapper.dtoToEntity(courtModifyParams);
-        if (newEntity == null) {
-            throw new RuntimeException("Entity not found"); // TODO throw in mapper instead?
-        }
+
         var res = courtRepository.createCourt(newEntity);
         if (res.isEmpty()) {
-            throw new RuntimeException("Court creation failed"); // TODO more meaningful error
+            throw new DatabaseException("Court creation failed");
         }
         return courtMapper.entityToResponseDto(res.get());
     }
@@ -49,18 +49,26 @@ public class CourtServiceImpl implements CourtService {
         var entityToSave = courtMapper.dtoToEntity(courtModifyParams);
         entityToSave.setId(id);
 
+        if (!courtExists(id)) {
+            throw new EntityNotFoundException(String.format("Court id: %s not found", id));
+        }
+
         var result = courtRepository.updateCourt(id, entityToSave);
         if (result.isEmpty()) {
-            throw new RuntimeException("Court surface update failed"); // TODO
+            throw new DatabaseException(String.format("Court (courtId: %s) update failed", id));
         }
         return courtMapper.entityToResponseDto(result.get());
     }
 
     @Override
     public CourtDTOs.CourtResponseDTO deleteCourt(long id) {
+        if (!courtExists(id)) {
+            throw new EntityNotFoundException(String.format("Court id: %s not found", id));
+        }
+
         var result = courtRepository.deleteCourt(id);
         if (result.isEmpty()) {
-            throw new RuntimeException("Court deletion failed"); // TODO
+            throw new DatabaseException(String.format("Failed to delete court (id: %s)", id));
         }
         return courtMapper.entityToResponseDto(result.get());
     }
@@ -68,5 +76,9 @@ public class CourtServiceImpl implements CourtService {
     @Override
     public List<CourtDTOs.CourtResponseDTO> getAllCourts() {
         return courtRepository.listCourts().stream().map(courtMapper::entityToResponseDto).toList();
+    }
+
+    private boolean courtExists(long id) {
+        return courtRepository.getCourtById(id).isPresent();
     }
 }
