@@ -1,47 +1,52 @@
 package com.example.inqooltennisreservationapi.controller;
 
-import com.example.inqooltennisreservationapi.model.entity.CourtSurfaceEntity;
-import com.example.inqooltennisreservationapi.repository.CourtSurfaceRepository;
+import com.example.inqooltennisreservationapi.model.api.CourtSurfaceDTOs;
+import com.example.inqooltennisreservationapi.service.CourtSurfaceService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/surfaces")
+@Validated
 public class SurfaceController {
 
-    CourtSurfaceRepository repo;
+    CourtSurfaceService service;
 
     @Autowired
-    public SurfaceController(CourtSurfaceRepository repo) {
-        this.repo = repo;
+    public SurfaceController(CourtSurfaceService service) {
+        this.service = service;
     }
 
     @GetMapping
-    public String listSurfaces() {
-        return repo.listCourtSurfaces().stream().map(CourtSurfaceEntity::toString).reduce("[ ", (String a, String b) -> a + "; " + b) + " ]";
+    public List<CourtSurfaceDTOs.CourtSurfaceResponseDTO> listSurfaces() {
+        return service.getAllSurfaces();
     }
 
     @PostMapping
-    public CourtSurfaceEntity createSurface(@RequestBody CourtSurfaceEntity surface) {
-        surface.setId(0);
-        var a = repo.createCourtSurface(surface);
-        return a.orElse(null);
+    @ResponseStatus(HttpStatus.CREATED)
+    public CourtSurfaceDTOs.CourtSurfaceResponseDTO createSurface(@RequestBody @Valid CourtSurfaceDTOs.CourtSurfaceModifyParams params) {
+        return service.createSurface(params);
     }
 
-    @GetMapping("{surfaceId}" )
-    public String getSurface(@PathVariable Long surfaceId) {
-        return repo.getCourtSurfaceById(surfaceId).toString();
+    @GetMapping("{surfaceId}")
+    public CourtSurfaceDTOs.CourtSurfaceResponseDTO getSurface(@PathVariable @Positive long surfaceId) {
+        return service.getSurface(surfaceId);
     }
 
-    @PutMapping("{surfaceId}" )
-    public String updateSurface(@PathVariable Long surfaceId, @RequestBody CourtSurfaceEntity data) {
-        return "TODO update surface: '" + surfaceId + "' - data: " + data + "\n";
+    @PutMapping("{surfaceId}")
+    public CourtSurfaceDTOs.CourtSurfaceResponseDTO updateSurface(@PathVariable @Positive long surfaceId, @RequestBody @Valid CourtSurfaceDTOs.CourtSurfaceModifyParams params) {
+        return service.editSurface(surfaceId, params);
     }
 
     @DeleteMapping("{surfaceId}")
-    public String deleteSurface(@PathVariable Long surfaceId) {
-        return "TODO delete surface: '" + surfaceId + "'\n";
+    public CourtSurfaceDTOs.CourtSurfaceResponseDTO deleteSurface(@PathVariable @Positive long surfaceId) {
+        return service.deleteSurface(surfaceId);
     }
-
 
 }
