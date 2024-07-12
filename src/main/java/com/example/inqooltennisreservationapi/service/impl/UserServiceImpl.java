@@ -1,5 +1,8 @@
 package com.example.inqooltennisreservationapi.service.impl;
 
+import com.example.inqooltennisreservationapi.exceptions.DatabaseException;
+import com.example.inqooltennisreservationapi.exceptions.EntityNotFoundException;
+import com.example.inqooltennisreservationapi.exceptions.InvalidRequestException;
 import com.example.inqooltennisreservationapi.model.api.UserDTOs;
 import com.example.inqooltennisreservationapi.model.mappers.UserMapper;
 import com.example.inqooltennisreservationapi.repository.UserRepository;
@@ -22,7 +25,7 @@ public class UserServiceImpl implements UserService {
     public UserDTOs.UserResponseDTO getUser(long id) {
         var res = userRepository.getUserById(id);
         if (res.isEmpty()) {
-            throw new RuntimeException("No such user"); // TODO
+            throw new EntityNotFoundException("User not found");
         }
         return userMapper.entityToResponseDto(res.get());
     }
@@ -31,21 +34,21 @@ public class UserServiceImpl implements UserService {
     public UserDTOs.UserResponseDTO getUserByPhone(String phone) {
         var res = userRepository.getUserByPhone(phone);
         if (res.isEmpty()) {
-            throw new RuntimeException("No such user"); // TODO
+            throw new EntityNotFoundException("User not found");
         }
         return userMapper.entityToResponseDto(res.get());
     }
 
     @Override
     public UserDTOs.UserResponseDTO createUser(UserDTOs.UserModifyParams userModifyParams) {
-        if (!userExists(userModifyParams.getPhone())) {
-            throw new RuntimeException("User already exists"); // TODO
+        if (userExists(userModifyParams.getPhone())) {
+            throw new InvalidRequestException("User with given phone already exists");
         }
 
         var entity = userMapper.dtoToEntity(userModifyParams);
         var res = userRepository.createUser(entity);
         if (res.isEmpty()) {
-            throw new RuntimeException("No such user");  // TODO
+            throw new DatabaseException("Failed to create user");
         }
 
         return userMapper.entityToResponseDto(res.get());
@@ -54,11 +57,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTOs.UserResponseDTO deleteUser(long id) {
         if (!userExists(id)) {
-            throw new RuntimeException("User does not exist"); // TODO
+            throw new EntityNotFoundException("User does not exist");
         }
         var res = userRepository.deleteUser(id);
         if (res.isEmpty()) {
-            throw new RuntimeException("No such user"); // TODO
+            throw new DatabaseException("Failed to delete user");
         }
         return userMapper.entityToResponseDto(res.get());
     }
