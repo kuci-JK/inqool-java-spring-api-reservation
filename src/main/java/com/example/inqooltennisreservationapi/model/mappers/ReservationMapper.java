@@ -42,7 +42,7 @@ public class ReservationMapper {
         return reservation;
     }
 
-    public ReservationDTOs.ReservationResponseDTO entityToResponseDto(@NotNull ReservationEntity reservation) {
+    public @NotNull ReservationDTOs.ReservationResponseDTO entityToResponseDto(@NotNull ReservationEntity reservation) {
 
         return new ReservationDTOs.ReservationResponseDTO(
                 reservation.getId(),
@@ -55,7 +55,7 @@ public class ReservationMapper {
         );
     }
 
-    public ReservationEntity dtoToEntity(ReservationDTOs.@NotNull ReservationModifyParams reservationModifyParams) {
+    public @NotNull ReservationEntity dtoToEntity(ReservationDTOs.@NotNull ReservationModifyParams reservationModifyParams) {
         var court = courtRepository.getCourtById(reservationModifyParams.getCourtId());
         if (court.isEmpty()) {
             throw new EntityNotFoundException(String.format("Court id: %s not found", reservationModifyParams.getCourtId()));

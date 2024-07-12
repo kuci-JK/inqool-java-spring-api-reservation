@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CourtSurfaceMapper {
 
-    public CourtSurfaceDTOs.CourtSurfaceResponseDTO entityToResponseDto(@NotNull CourtSurfaceEntity courtSurface) {
+    public @NotNull CourtSurfaceDTOs.CourtSurfaceResponseDTO entityToResponseDto(@NotNull CourtSurfaceEntity courtSurface) {
         return new CourtSurfaceDTOs.CourtSurfaceResponseDTO(
                 courtSurface.getId(),
                 courtSurface.getSurfaceName(),
@@ -18,7 +18,7 @@ public class CourtSurfaceMapper {
     }
 
 
-    public CourtSurfaceEntity dtoToEntity(CourtSurfaceDTOs.@NotNull CourtSurfaceModifyParams courtSurfaceModifyParams) {
+    public @NotNull CourtSurfaceEntity dtoToEntity(CourtSurfaceDTOs.@NotNull CourtSurfaceModifyParams courtSurfaceModifyParams) {
         return new CourtSurfaceEntity(0, courtSurfaceModifyParams.getSurfaceName(), courtSurfaceModifyParams.getPricePerMinute());
     }
 

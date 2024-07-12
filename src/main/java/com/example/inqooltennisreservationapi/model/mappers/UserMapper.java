@@ -8,11 +8,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserMapper {
 
-    public UserDTOs.UserResponseDTO entityToResponseDto(@NotNull UserEntity userEntity) {
+    public @NotNull UserDTOs.UserResponseDTO entityToResponseDto(@NotNull UserEntity userEntity) {
         return new UserDTOs.UserResponseDTO(userEntity.getId(), userEntity.getName(), userEntity.getPhone(), userEntity.isDeleted());
     }
 
-    public UserEntity dtoToEntity(UserDTOs.@NotNull UserModifyParams userModifyParams) {
+    public @NotNull UserEntity dtoToEntity(UserDTOs.@NotNull UserModifyParams userModifyParams) {
         return new UserEntity(0, userModifyParams.getName(), userModifyParams.getPhone());
     }
 }

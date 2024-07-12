@@ -20,7 +20,7 @@ public class CourtMapper {
         this.surfaceMapper = surfaceMapper;
     }
 
-    public CourtDTOs.CourtResponseDTO entityToResponseDto(@NotNull CourtEntity court) {
+    public @NotNull CourtDTOs.CourtResponseDTO entityToResponseDto(@NotNull CourtEntity court) {
         return new CourtDTOs.CourtResponseDTO(
                 court.getId(),
                 court.getName(),
@@ -29,7 +29,7 @@ public class CourtMapper {
         );
     }
 
-    public CourtEntity dtoToEntity(CourtDTOs.@NotNull CourtModifyParams courtModifyParams) {
+    public @NotNull CourtEntity dtoToEntity(CourtDTOs.@NotNull CourtModifyParams courtModifyParams) {
 
         var surface = surfaceRepo.getCourtSurfaceById(courtModifyParams.getCourtSurfaceId());
         if (surface.isEmpty()) {
