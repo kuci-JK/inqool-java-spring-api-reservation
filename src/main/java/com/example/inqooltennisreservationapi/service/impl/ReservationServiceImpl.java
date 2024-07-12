@@ -1,5 +1,7 @@
 package com.example.inqooltennisreservationapi.service.impl;
 
+import com.example.inqooltennisreservationapi.exceptions.DatabaseException;
+import com.example.inqooltennisreservationapi.exceptions.EntityNotFoundException;
 import com.example.inqooltennisreservationapi.model.api.ReservationDTOs;
 import com.example.inqooltennisreservationapi.model.mappers.ReservationMapper;
 import com.example.inqooltennisreservationapi.repository.ReservationRepository;
@@ -25,7 +27,7 @@ public class ReservationServiceImpl implements ReservationService {
     public ReservationDTOs.ReservationResponseDTO getReservation(long id) {
         var entity = reservationRepository.getReservationById(id);
         if (entity.isEmpty()) {
-            throw new RuntimeException("Entity not found"); // TODO
+            throw new EntityNotFoundException(String.format("Reservation (id: %s) not found", id));
         }
         return reservationMapper.entityToResponseDto(entity.get());
     }
@@ -33,12 +35,10 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public ReservationDTOs.ReservationResponseDTO createReservation(ReservationDTOs.ReservationModifyParams reservation) {
         var newEntity = reservationMapper.dtoToEntity(reservation);
-        if (newEntity == null) {
-            throw new RuntimeException("Entity not found"); // TODO
-        }
+
         var res = reservationRepository.createReservation(newEntity);
         if (res.isEmpty()) {
-            throw new RuntimeException("Creation of reservation failed");
+            throw new DatabaseException("Failed to create reservation");
         }
         return reservationMapper.entityToResponseDto(res.get());
     }
@@ -50,7 +50,7 @@ public class ReservationServiceImpl implements ReservationService {
 
         var res = reservationRepository.updateReservation(id, toSave);
         if (res.isEmpty()) {
-            throw new RuntimeException("Updating reservation failed"); // TODO
+            throw new DatabaseException("Failed to update reservation");
         }
         return reservationMapper.entityToResponseDto(res.get());
     }
@@ -59,7 +59,7 @@ public class ReservationServiceImpl implements ReservationService {
     public ReservationDTOs.ReservationResponseDTO deleteReservation(long id) {
         var res = reservationRepository.deleteReservation(id);
         if (res.isEmpty()) {
-            throw new RuntimeException("Deleting reservation failed");
+            throw new DatabaseException("Failed to delete reservation");
         }
         return reservationMapper.entityToResponseDto(res.get());
     }
