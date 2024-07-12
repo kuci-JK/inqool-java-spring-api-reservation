@@ -62,7 +62,6 @@
             <artifactId>hibernate-platform</artifactId>
             <version>6.5.2.Final</version>
             <type>pom</type>
-            <scope>import</scope>
         </dependency>
 
         <dependency>
