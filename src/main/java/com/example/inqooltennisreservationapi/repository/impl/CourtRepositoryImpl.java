@@ -25,7 +25,6 @@ public class CourtRepositoryImpl implements CourtRepository {
     public Optional<CourtEntity> updateCourt(long id, CourtEntity updatedCourtEntity) {
         var existing = entityManager.find(CourtEntity.class, id);
         if (existing == null) {
-            // TODO
             return Optional.empty();
         }
         existing.setName(updatedCourtEntity.getName());
@@ -39,7 +38,6 @@ public class CourtRepositoryImpl implements CourtRepository {
     public Optional<CourtEntity> deleteCourt(long id) {
         var existing = entityManager.find(CourtEntity.class, id);
         if (existing == null) {
-            // TODO
             return Optional.empty();
         }
         existing.setDeleted(true);
@@ -53,6 +51,7 @@ public class CourtRepositoryImpl implements CourtRepository {
 
     @Override
     public List<CourtEntity> listCourts() {
-        return entityManager.createQuery("from CourtEntity", CourtEntity.class).getResultList();
+        // TODO change ordering ?
+        return entityManager.createQuery("from CourtEntity order by name asc", CourtEntity.class).getResultList();
     }
 }

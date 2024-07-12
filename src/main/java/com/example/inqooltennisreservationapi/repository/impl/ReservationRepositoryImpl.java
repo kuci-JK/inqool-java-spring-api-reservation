@@ -28,7 +28,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     public Optional<ReservationEntity> updateReservation(long id, ReservationEntity updatedReservationEntity) {
         var existingReservation = entityManager.find(ReservationEntity.class, id);
         if (existingReservation == null) {
-            return Optional.empty(); // TODO
+            return Optional.empty();
         }
         existingReservation.setCreatedDate(updatedReservationEntity.getCreatedDate());
         existingReservation.setReservationStart(updatedReservationEntity.getReservationStart());
@@ -45,7 +45,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     public Optional<ReservationEntity> deleteReservation(long id) {
         var existingReservation = entityManager.find(ReservationEntity.class, id);
         if (existingReservation == null) {
-            return Optional.empty(); // TODO
+            return Optional.empty();
         }
         existingReservation.setDeleted(true);
         return updateReservation(id, existingReservation);

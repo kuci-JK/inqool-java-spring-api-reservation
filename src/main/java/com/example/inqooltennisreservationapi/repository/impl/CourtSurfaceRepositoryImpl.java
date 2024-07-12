@@ -27,26 +27,26 @@ public class CourtSurfaceRepositoryImpl implements CourtSurfaceRepository {
     @Transactional
     public Optional<CourtSurfaceEntity> updateCourtSurface(long id, CourtSurfaceEntity updatedCourtSurfaceEntity) {
         CourtSurfaceEntity existingCourtSurfaceEntity = entityManager.find(CourtSurfaceEntity.class, id);
-        if (existingCourtSurfaceEntity != null) {
-            existingCourtSurfaceEntity.setSurfaceName(updatedCourtSurfaceEntity.getSurfaceName());
-            existingCourtSurfaceEntity.setPricePerMinute(updatedCourtSurfaceEntity.getPricePerMinute());
-            entityManager.merge(existingCourtSurfaceEntity);
-            return Optional.of(existingCourtSurfaceEntity);
-        } else {
+        if (existingCourtSurfaceEntity == null) {
             return Optional.empty();
         }
+
+        existingCourtSurfaceEntity.setSurfaceName(updatedCourtSurfaceEntity.getSurfaceName());
+        existingCourtSurfaceEntity.setPricePerMinute(updatedCourtSurfaceEntity.getPricePerMinute());
+        entityManager.merge(existingCourtSurfaceEntity);
+        return Optional.of(existingCourtSurfaceEntity);
     }
 
     @Override
     @Transactional
     public Optional<CourtSurfaceEntity> deleteCourtSurface(long id) {
         CourtSurfaceEntity courtSurfaceEntity = entityManager.find(CourtSurfaceEntity.class, id);
-        if (courtSurfaceEntity != null) {
-            entityManager.remove(courtSurfaceEntity);
-            return Optional.of(courtSurfaceEntity);
-        } else {
+        if (courtSurfaceEntity == null) {
             return Optional.empty();
         }
+
+        entityManager.remove(courtSurfaceEntity);
+        return Optional.of(courtSurfaceEntity);
     }
 
     @Override
@@ -56,6 +56,7 @@ public class CourtSurfaceRepositoryImpl implements CourtSurfaceRepository {
 
     @Override
     public List<CourtSurfaceEntity> listCourtSurfaces() {
+        // TODO decide order...
         return entityManager.createQuery("from CourtSurfaceEntity", CourtSurfaceEntity.class).getResultList();
     }
 }

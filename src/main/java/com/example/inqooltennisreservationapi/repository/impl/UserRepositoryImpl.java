@@ -25,7 +25,6 @@ public class UserRepositoryImpl implements UserRepository {
     public Optional<UserEntity> deleteUser(long id) {
         var existing = entityManager.find(UserEntity.class, id);
         if (existing == null) {
-            // TODO
             return Optional.empty();
         }
 
