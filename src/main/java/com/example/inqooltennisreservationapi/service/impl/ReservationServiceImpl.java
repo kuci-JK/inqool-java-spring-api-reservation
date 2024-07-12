@@ -6,21 +6,25 @@ import com.example.inqooltennisreservationapi.model.api.ReservationDTOs;
 import com.example.inqooltennisreservationapi.model.mappers.ReservationMapper;
 import com.example.inqooltennisreservationapi.repository.ReservationRepository;
 import com.example.inqooltennisreservationapi.service.ReservationService;
+import com.example.inqooltennisreservationapi.validation.ReservationValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
     private final ReservationMapper reservationMapper;
+    private final ReservationValidator validator;
 
     @Autowired
-    public ReservationServiceImpl(ReservationRepository reservationRepository, ReservationMapper reservationMapper) {
+    public ReservationServiceImpl(ReservationRepository reservationRepository, ReservationMapper reservationMapper, ReservationValidator reservationValidator) {
         this.reservationRepository = reservationRepository;
         this.reservationMapper = reservationMapper;
+        this.validator = reservationValidator;
     }
 
     @Override
@@ -34,9 +38,9 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public ReservationDTOs.ReservationResponseDTO createReservation(ReservationDTOs.ReservationModifyParams reservation) {
-        var newEntity = reservationMapper.dtoToEntity(reservation);
+        validator.validateReservationRequest(Optional.empty(), reservation);
 
-        // TODO validate dates, availability and user name + phone
+        var newEntity = reservationMapper.dtoToEntity(reservation);
 
         var res = reservationRepository.createReservation(newEntity);
         if (res.isEmpty()) {
@@ -47,14 +51,13 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public ReservationDTOs.ReservationResponseDTO editReservation(long id, ReservationDTOs.ReservationModifyParams reservation) {
-        var toSave = reservationMapper.dtoToEntity(reservation);
-        toSave.setId(id);
-
         if (!reservationExists(id)) {
             throw new EntityNotFoundException(String.format("Reservation (id: %s) not found", id));
         }
+        validator.validateReservationRequest(Optional.of(id), reservation);
 
-        // TODO validate dates, availability and user name + phone
+        var toSave = reservationMapper.dtoToEntity(reservation);
+        toSave.setId(id);
 
         var res = reservationRepository.updateReservation(id, toSave);
         if (res.isEmpty()) {

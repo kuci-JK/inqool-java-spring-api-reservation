@@ -52,7 +52,6 @@ public class ReservationController {
     public ReservationDTOs.ReservationResponseDTO createReservation(
             @RequestBody @NotNull @Valid ReservationDTOs.ReservationModifyParams params
     ) {
-        params.validateDateInterval();
         return service.createReservation(params);
     }
 
@@ -61,7 +60,6 @@ public class ReservationController {
             @PathVariable @Positive long reservationId,
             @RequestBody @NotNull @Valid ReservationDTOs.ReservationModifyParams params
     ) {
-        params.validateDateInterval();
         return service.editReservation(reservationId, params);
     }
 
