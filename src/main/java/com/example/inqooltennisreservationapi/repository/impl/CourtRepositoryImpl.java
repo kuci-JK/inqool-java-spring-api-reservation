@@ -52,6 +52,7 @@ public class CourtRepositoryImpl implements CourtRepository {
     @Override
     public List<CourtEntity> listCourts() {
         // TODO change ordering ?
+        // TODO exclude deleted
         return entityManager.createQuery("from CourtEntity order by name asc", CourtEntity.class).getResultList();
     }
 }

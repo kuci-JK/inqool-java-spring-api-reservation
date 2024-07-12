@@ -57,6 +57,7 @@ public class CourtSurfaceRepositoryImpl implements CourtSurfaceRepository {
     @Override
     public List<CourtSurfaceEntity> listCourtSurfaces() {
         // TODO decide order...
+        // TODO exclude deleted
         return entityManager.createQuery("from CourtSurfaceEntity", CourtSurfaceEntity.class).getResultList();
     }
 }

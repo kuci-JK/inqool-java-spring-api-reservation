@@ -71,6 +71,8 @@ public class ReservationRepositoryImpl implements ReservationRepository {
         var query = builder.createQuery(ReservationEntity.class);
         var root = query.from(ReservationEntity.class);
 
+        // TODO exclude deleted
+
         List<Predicate> predicates = new ArrayList<>();
         courId.ifPresent(aLong -> {
             predicates.add(builder.equal(root.get("court").get("id"), aLong));
