@@ -36,6 +36,8 @@ public class ReservationServiceImpl implements ReservationService {
     public ReservationDTOs.ReservationResponseDTO createReservation(ReservationDTOs.ReservationModifyParams reservation) {
         var newEntity = reservationMapper.dtoToEntity(reservation);
 
+        // TODO validate dates, availability and user name + phone
+
         var res = reservationRepository.createReservation(newEntity);
         if (res.isEmpty()) {
             throw new DatabaseException("Failed to create reservation");
@@ -48,6 +50,12 @@ public class ReservationServiceImpl implements ReservationService {
         var toSave = reservationMapper.dtoToEntity(reservation);
         toSave.setId(id);
 
+        if (!reservationExists(id)) {
+            throw new EntityNotFoundException(String.format("Reservation (id: %s) not found", id));
+        }
+
+        // TODO validate dates, availability and user name + phone
+
         var res = reservationRepository.updateReservation(id, toSave);
         if (res.isEmpty()) {
             throw new DatabaseException("Failed to update reservation");
@@ -57,6 +65,10 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public ReservationDTOs.ReservationResponseDTO deleteReservation(long id) {
+        if (!reservationExists(id)) {
+            throw new EntityNotFoundException(String.format("Reservation (id: %s) not found", id));
+        }
+
         var res = reservationRepository.deleteReservation(id);
         if (res.isEmpty()) {
             throw new DatabaseException("Failed to delete reservation");
@@ -72,5 +84,9 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public List<ReservationDTOs.ReservationResponseDTO> getReservationsForUser(String phone, boolean futureOnly) {
         return reservationRepository.listReservations(phone, futureOnly).stream().map(reservationMapper::entityToResponseDto).toList();
+    }
+
+    private boolean reservationExists(long id) {
+        return reservationRepository.getReservationById(id).isPresent();
     }
 }
