@@ -44,9 +44,9 @@ public class CourtSurfaceRepositoryImpl implements CourtSurfaceRepository {
         if (courtSurfaceEntity == null) {
             return Optional.empty();
         }
-
-        entityManager.remove(courtSurfaceEntity);
-        return Optional.of(courtSurfaceEntity);
+        // TODO also remove used ??
+        courtSurfaceEntity.setDeleted(true);
+        return updateCourtSurface(id, courtSurfaceEntity);
     }
 
     @Override
