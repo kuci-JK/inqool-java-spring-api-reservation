@@ -4,7 +4,7 @@ import com.example.inqooltennisreservationapi.model.api.CourtSurfaceDTOs;
 
 import java.util.List;
 
-public interface CourSurfaceService {
+public interface CourtSurfaceService {
 
     CourtSurfaceDTOs.CourtSurfaceResponseDTO getSurface(long id);
 

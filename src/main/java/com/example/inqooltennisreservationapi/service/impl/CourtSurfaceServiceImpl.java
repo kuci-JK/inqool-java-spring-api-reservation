@@ -5,14 +5,14 @@ import com.example.inqooltennisreservationapi.exceptions.EntityNotFoundException
 import com.example.inqooltennisreservationapi.model.api.CourtSurfaceDTOs;
 import com.example.inqooltennisreservationapi.model.mappers.CourtSurfaceMapper;
 import com.example.inqooltennisreservationapi.repository.CourtSurfaceRepository;
-import com.example.inqooltennisreservationapi.service.CourSurfaceService;
+import com.example.inqooltennisreservationapi.service.CourtSurfaceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class CourtSurfaceServiceImpl implements CourSurfaceService {
+public class CourtSurfaceServiceImpl implements CourtSurfaceService {
 
     private final CourtSurfaceRepository surfaceRepository;
     private final CourtSurfaceMapper courtSurfaceMapper;
