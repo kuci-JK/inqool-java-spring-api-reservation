@@ -97,7 +97,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
         return entityManager.createQuery(query).getResultList().isEmpty();
     }
 
-    private List<ReservationEntity> listReservations(Optional<Long> courId, Optional<String> phone, boolean futureOnly) {
+    private List<ReservationEntity> listReservations(Optional<Long> courtId, Optional<String> phone, boolean futureOnly) {
         var builder = entityManager.getCriteriaBuilder();
         var query = builder.createQuery(ReservationEntity.class);
         var root = query.from(ReservationEntity.class);
@@ -105,12 +105,12 @@ public class ReservationRepositoryImpl implements ReservationRepository {
         List<Predicate> predicates = new ArrayList<>();
         predicates.add(entityNotDeletetPredicate(builder, root));
 
-        courId.ifPresent(aLong -> {
+        courtId.ifPresent(aLong -> {
             predicates.add(builder.equal(root.get("reservedCourtEntity").get("id"), aLong));
             query.orderBy(builder.asc(root.get("createdDate")));
         });
         phone.ifPresent(s -> {
-            predicates.add(builder.equal(root.get("phone"), s));
+            predicates.add(builder.equal(root.get("phone"), builder.parameter(String.class, "phone")));
             query.orderBy(builder.asc(root.get("reservationStart")));
         });
         if (futureOnly) {
@@ -121,7 +121,9 @@ public class ReservationRepositoryImpl implements ReservationRepository {
 
         query.select(root);
 
-        return entityManager.createQuery(query).getResultList();
+        var actualQuery = entityManager.createQuery(query);
+        phone.ifPresent(s -> actualQuery.setParameter("phone", s));
+        return actualQuery.getResultList();
     }
 
     @Override

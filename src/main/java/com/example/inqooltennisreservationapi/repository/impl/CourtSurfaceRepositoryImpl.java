@@ -64,6 +64,9 @@ public class CourtSurfaceRepositoryImpl implements CourtSurfaceRepository {
 
     @Override
     public Optional<CourtSurfaceEntity> getCourtSurfaceById(long id) {
+        if (!entityExists(entityManager, CourtSurfaceEntity.class, id)) {
+            return Optional.empty();
+        }
         return Optional.ofNullable(entityManager.find(CourtSurfaceEntity.class, id));
     }
 
