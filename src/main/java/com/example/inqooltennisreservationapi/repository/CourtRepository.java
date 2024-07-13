@@ -15,6 +15,8 @@ public interface CourtRepository extends RepositoryForSoftDeletableEntity {
 
     Optional<CourtEntity> getCourtById(long id);
 
+    List<CourtEntity> listCourtsBySurface(long surfaceId);
+
     List<CourtEntity> listCourts();
 
 

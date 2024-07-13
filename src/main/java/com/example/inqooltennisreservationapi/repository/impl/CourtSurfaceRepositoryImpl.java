@@ -1,10 +1,12 @@
 package com.example.inqooltennisreservationapi.repository.impl;
 
 import com.example.inqooltennisreservationapi.model.entity.CourtSurfaceEntity;
+import com.example.inqooltennisreservationapi.repository.CourtRepository;
 import com.example.inqooltennisreservationapi.repository.CourtSurfaceRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,6 +17,13 @@ public class CourtSurfaceRepositoryImpl implements CourtSurfaceRepository {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    private final CourtRepository courtRepo;
+
+    @Autowired
+    public CourtSurfaceRepositoryImpl(CourtRepository courtRepo) {
+        this.courtRepo = courtRepo;
+    }
 
     @Override
     @Transactional
@@ -44,7 +53,11 @@ public class CourtSurfaceRepositoryImpl implements CourtSurfaceRepository {
         if (courtSurfaceEntity == null || courtSurfaceEntity.isDeleted()) {
             return Optional.empty();
         }
-        // TODO also remove used ??
+
+        for (var court : courtRepo.listCourtsBySurface(id)) {
+            courtRepo.deleteCourt(court.getId());
+        }
+
         courtSurfaceEntity.setDeleted(true);
         return updateCourtSurface(id, courtSurfaceEntity);
     }

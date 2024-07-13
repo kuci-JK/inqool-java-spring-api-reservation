@@ -1,12 +1,17 @@
 package com.example.inqooltennisreservationapi.repository.impl;
 
+import com.example.inqooltennisreservationapi.exceptions.DatabaseException;
 import com.example.inqooltennisreservationapi.model.entity.CourtEntity;
+import com.example.inqooltennisreservationapi.model.entity.CourtSurfaceEntity;
 import com.example.inqooltennisreservationapi.repository.CourtRepository;
+import com.example.inqooltennisreservationapi.repository.ReservationRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,6 +20,13 @@ public class CourtRepositoryImpl implements CourtRepository {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    private final ReservationRepository reservationRepo;
+
+    @Autowired
+    public CourtRepositoryImpl(ReservationRepository reservationRepo) {
+        this.reservationRepo = reservationRepo;
+    }
 
     @Override
     @Transactional
@@ -44,6 +56,17 @@ public class CourtRepositoryImpl implements CourtRepository {
         if (existing == null || existing.isDeleted()) {
             return Optional.empty();
         }
+
+        var now = LocalDateTime.now();
+        var reservations = reservationRepo.listReservationsByCourt(id);
+        if (reservations.stream().anyMatch(r -> now.isBefore(r.getReservationEnd()))) {
+            throw new DatabaseException("Cannot delete court. Court has non finished reservations");
+        }
+
+        for (var reservation : reservationRepo.listReservationsByCourt(id)) {
+            reservationRepo.deleteReservation(reservation.getId());
+        }
+
         existing.setDeleted(true);
         return updateCourt(id, existing);
     }
@@ -54,6 +77,20 @@ public class CourtRepositoryImpl implements CourtRepository {
             return Optional.empty();
         }
         return Optional.ofNullable(entityManager.find(CourtEntity.class, id));
+    }
+
+    @Override
+    public List<CourtEntity> listCourtsBySurface(long surfaceId) {
+        var builder = entityManager.getCriteriaBuilder();
+        var query = builder.createQuery(CourtEntity.class);
+        var root = query.from(CourtEntity.class);
+        query.select(root)
+                .where(builder.and(
+                        entityNotDeletetPredicate(builder, root),
+                        builder.equal(root.get("surface").<CourtSurfaceEntity>get("id"), surfaceId)
+                ));
+
+        return entityManager.createQuery(query).getResultList();
     }
 
     @Override
