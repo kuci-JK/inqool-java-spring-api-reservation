@@ -15,10 +15,9 @@ import java.util.Optional;
 @Repository
 public class CourtSurfaceRepositoryImpl implements CourtSurfaceRepository {
 
+    private final CourtRepository courtRepo;
     @PersistenceContext
     private EntityManager entityManager;
-
-    private final CourtRepository courtRepo;
 
     @Autowired
     public CourtSurfaceRepositoryImpl(CourtRepository courtRepo) {

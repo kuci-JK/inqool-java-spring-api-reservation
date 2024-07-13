@@ -18,10 +18,10 @@ import java.util.Optional;
 @Repository
 public class CourtRepositoryImpl implements CourtRepository {
 
+    private final ReservationRepository reservationRepo;
+
     @PersistenceContext
     private EntityManager entityManager;
-
-    private final ReservationRepository reservationRepo;
 
     @Autowired
     public CourtRepositoryImpl(ReservationRepository reservationRepo) {
