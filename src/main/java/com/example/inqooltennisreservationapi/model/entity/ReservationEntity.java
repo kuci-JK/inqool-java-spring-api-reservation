@@ -3,6 +3,8 @@ package com.example.inqooltennisreservationapi.model.entity;
 import com.example.inqooltennisreservationapi.model.GameType;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -40,10 +42,12 @@ public class ReservationEntity extends SoftDeletableEntity {
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "court_id", nullable = false)
+    @Cascade(CascadeType.ALL)
     private CourtEntity reservedCourtEntity;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
+    @Cascade(CascadeType.ALL)
     private UserEntity userEntity;
 
     public double getTotalPrice() {

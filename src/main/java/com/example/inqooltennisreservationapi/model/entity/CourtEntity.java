@@ -2,6 +2,8 @@ package com.example.inqooltennisreservationapi.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
@@ -24,6 +26,7 @@ public class CourtEntity extends SoftDeletableEntity {
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "surface_id", nullable = false)
+    @Cascade(CascadeType.ALL)
     private CourtSurfaceEntity surface;
 
 }

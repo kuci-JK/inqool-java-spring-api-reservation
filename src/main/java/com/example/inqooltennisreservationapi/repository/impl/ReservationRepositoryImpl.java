@@ -2,6 +2,7 @@ package com.example.inqooltennisreservationapi.repository.impl;
 
 import com.example.inqooltennisreservationapi.model.entity.CourtEntity;
 import com.example.inqooltennisreservationapi.model.entity.ReservationEntity;
+import com.example.inqooltennisreservationapi.model.entity.UserEntity;
 import com.example.inqooltennisreservationapi.repository.ReservationRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -24,7 +25,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     @Transactional
     public Optional<ReservationEntity> createReservation(ReservationEntity reservationEntity) {
         entityManager.persist(reservationEntity);
-        return Optional.of(reservationEntity);
+        return Optional.of(entityManager.find(ReservationEntity.class, reservationEntity.getId()));
     }
 
     @Override
@@ -93,7 +94,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
         query.where(predicates.toArray(new Predicate[0]));
         query.select(root);
 
-        return entityManager.createQuery(query).getResultList().isEmpty();
+        return !entityManager.createQuery(query).getResultList().isEmpty();
     }
 
     private List<ReservationEntity> listReservations(Optional<Long> courtId, Optional<String> phone, boolean futureOnly) {
@@ -109,7 +110,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
             query.orderBy(builder.asc(root.get("createdDate")));
         });
         phone.ifPresent(s -> {
-            predicates.add(builder.equal(root.get("phone"), builder.parameter(String.class, "phone")));
+            predicates.add(builder.equal(root.get("userEntity").<UserEntity>get("phone"), builder.parameter(String.class, "phone")));
             query.orderBy(builder.asc(root.get("reservationStart")));
         });
         if (futureOnly) {

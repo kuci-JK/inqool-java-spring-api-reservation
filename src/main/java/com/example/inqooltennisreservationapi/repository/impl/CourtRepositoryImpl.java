@@ -32,7 +32,7 @@ public class CourtRepositoryImpl implements CourtRepository {
     @Transactional
     public Optional<CourtEntity> createCourt(CourtEntity courtEntity) {
         entityManager.persist(courtEntity);
-        return Optional.of(courtEntity);
+        return Optional.of(entityManager.find(CourtEntity.class, courtEntity.getId()));
     }
 
     @Override

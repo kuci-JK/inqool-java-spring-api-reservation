@@ -3,6 +3,7 @@ package com.example.inqooltennisreservationapi.repository.impl;
 import com.example.inqooltennisreservationapi.model.entity.UserEntity;
 import com.example.inqooltennisreservationapi.repository.UserRepository;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 
@@ -22,6 +23,10 @@ public class UserRepositoryImpl implements UserRepository {
         query.where(builder.equal(root.get("phone"), builder.parameter(String.class, "phone")));
         query.select(root);
 
-        return Optional.ofNullable(entityManager.createQuery(query).setParameter("phone", phone).getSingleResult());
+        try {
+            return Optional.ofNullable(entityManager.createQuery(query).setParameter("phone", phone).getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
     }
 }

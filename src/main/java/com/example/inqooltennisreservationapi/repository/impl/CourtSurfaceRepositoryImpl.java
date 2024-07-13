@@ -29,7 +29,7 @@ public class CourtSurfaceRepositoryImpl implements CourtSurfaceRepository {
     @Transactional
     public Optional<CourtSurfaceEntity> createCourtSurface(CourtSurfaceEntity courtSurfaceEntity) {
         entityManager.persist(courtSurfaceEntity);
-        return Optional.of(courtSurfaceEntity);
+        return Optional.of(entityManager.find(CourtSurfaceEntity.class, courtSurfaceEntity.getId()));
     }
 
     @Override
