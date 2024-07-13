@@ -126,6 +126,8 @@ public class ReservationRepositoryImpl implements ReservationRepository {
 
     @Override
     public List<ReservationEntity> listReservationsByCourt(long courtId) {
-        return List.of();
+        return entityManager.createQuery("from ReservationEntity where reservedCourtEntity.id = :courtId", ReservationEntity.class)
+                .setParameter("courtId", courtId)
+                .getResultList();
     }
 }

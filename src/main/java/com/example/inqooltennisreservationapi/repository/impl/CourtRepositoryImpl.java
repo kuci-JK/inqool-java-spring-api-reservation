@@ -63,10 +63,6 @@ public class CourtRepositoryImpl implements CourtRepository {
             throw new DatabaseException("Cannot delete court. Court has non finished reservations");
         }
 
-        for (var reservation : reservationRepo.listReservationsByCourt(id)) {
-            reservationRepo.deleteReservation(reservation.getId());
-        }
-
         existing.setDeleted(true);
         return updateCourt(id, existing);
     }
