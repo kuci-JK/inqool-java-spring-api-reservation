@@ -38,7 +38,6 @@ public class ReservationRepositoryImpl implements ReservationRepository {
         existingReservation.setReservationStart(updatedReservationEntity.getReservationStart());
         existingReservation.setReservationEnd(updatedReservationEntity.getReservationEnd());
         existingReservation.setGameType(updatedReservationEntity.getGameType());
-        existingReservation.setTotalPrice(updatedReservationEntity.getTotalPrice());
         existingReservation.setReservedCourtEntity(updatedReservationEntity.getReservedCourtEntity());
         existingReservation.setUserEntity(updatedReservationEntity.getUserEntity());
 

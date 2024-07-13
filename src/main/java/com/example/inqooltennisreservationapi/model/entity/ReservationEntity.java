@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
@@ -37,9 +38,6 @@ public class ReservationEntity extends SoftDeletableEntity {
     @Column(name = "game_type", nullable = false)
     private GameType gameType;
 
-    @Column(name = "total_price", nullable = false)
-    private double totalPrice;
-
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "court_id", nullable = false)
     private CourtEntity reservedCourtEntity;
@@ -47,4 +45,9 @@ public class ReservationEntity extends SoftDeletableEntity {
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity userEntity;
+
+    public double getTotalPrice() {
+        var minutesTotal = ChronoUnit.MINUTES.between(reservationStart, reservationEnd);
+        return reservedCourtEntity.getSurface().getPricePerMinute() * minutesTotal * gameType.getPriceMultiplier();
+    }
 }

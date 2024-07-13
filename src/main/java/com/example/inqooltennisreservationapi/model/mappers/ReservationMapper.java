@@ -55,6 +55,7 @@ public class ReservationMapper {
                 reservation.getReservationStart(),
                 reservation.getReservationEnd(),
                 reservation.getGameType(),
+                reservation.getTotalPrice(),
                 courtMapper.entityToResponseDto(reservation.getReservedCourtEntity()),
                 userMapper.entityToResponseDto(reservation.getUserEntity())
         );

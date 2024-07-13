@@ -46,6 +46,7 @@ public class ReservationDTOs {
         private LocalDateTime reservationStart;
         private LocalDateTime reservationEnd;
         private GameType gameType;
+        private double price;
         private CourtDTOs.CourtResponseDTO court;
         private UserDTOs.UserResponseDTO customer;
     }
