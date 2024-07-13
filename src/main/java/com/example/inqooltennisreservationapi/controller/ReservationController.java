@@ -4,7 +4,6 @@ import com.example.inqooltennisreservationapi.exceptions.InvalidRequestException
 import com.example.inqooltennisreservationapi.model.api.ReservationDTOs;
 import com.example.inqooltennisreservationapi.service.ReservationService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,15 +27,21 @@ public class ReservationController {
 
     @GetMapping
     public List<ReservationDTOs.ReservationResponseDTO> listReservations(
-            @RequestParam(name = "courtId", required = false) Optional<@Positive @NotNull Long> courtId,
-            @RequestParam(name = "phone", required = false) Optional<@NotBlank String> phone,
+            @RequestParam(name = "courtId", required = false) Optional<Long> courtId,
+            @RequestParam(name = "phone", required = false) Optional<String> phone,
             @RequestParam(name = "onlyFuture", defaultValue = "false") boolean onlyFuture
     ) {
-        if (courtId.isEmpty() && phone.isEmpty()) {
+        if ((courtId.isEmpty() && phone.isEmpty()) || (courtId.isPresent() && phone.isPresent())) {
             throw new InvalidRequestException("Need to provide either courtId or phone number");
         }
         if (courtId.isPresent()) {
+            if (courtId.get() <= 0) {
+                throw new InvalidRequestException("Invalid courtId");
+            }
             return service.getReservationsOnCourt(courtId.get(), onlyFuture);
+        }
+        if (phone.get().isEmpty()) {
+            throw new InvalidRequestException("Phone number must be present");
         }
         return service.getReservationsForUser(phone.get(), onlyFuture);
     }
