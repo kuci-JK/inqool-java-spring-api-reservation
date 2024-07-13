@@ -68,6 +68,7 @@ public class CourtRepositoryImpl implements CourtRepository {
     }
 
     @Override
+    @Transactional
     public Optional<CourtEntity> getCourtById(long id) {
         if (!entityExists(entityManager, CourtEntity.class, id)) {
             return Optional.empty();
@@ -76,6 +77,7 @@ public class CourtRepositoryImpl implements CourtRepository {
     }
 
     @Override
+    @Transactional
     public List<CourtEntity> listCourtsBySurface(long surfaceId) {
         var builder = entityManager.getCriteriaBuilder();
         var query = builder.createQuery(CourtEntity.class);
@@ -90,6 +92,7 @@ public class CourtRepositoryImpl implements CourtRepository {
     }
 
     @Override
+    @Transactional
     public List<CourtEntity> listCourts() {
         return entityManager.createQuery(
                 "from CourtEntity where deleted = false order by name asc", CourtEntity.class

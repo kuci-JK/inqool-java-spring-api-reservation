@@ -57,6 +57,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     }
 
     @Override
+    @Transactional
     public Optional<ReservationEntity> getReservationById(long id) {
         if (!entityExists(entityManager, ReservationEntity.class, id)) {
             return Optional.empty();
@@ -65,16 +66,19 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     }
 
     @Override
+    @Transactional
     public List<ReservationEntity> listReservations(long courId, boolean futureOnly) {
         return listReservations(Optional.of(courId), Optional.empty(), futureOnly);
     }
 
     @Override
+    @Transactional
     public List<ReservationEntity> listReservations(String phone, boolean futureOnly) {
         return listReservations(Optional.empty(), Optional.of(phone), futureOnly);
     }
 
     @Override
+    @Transactional
     public boolean overlapsExistingReservations(
             long courtId, LocalDateTime from, LocalDateTime to, Optional<Long> ignoreReservationId
     ) {
@@ -97,6 +101,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
         return !entityManager.createQuery(query).getResultList().isEmpty();
     }
 
+    @Transactional
     private List<ReservationEntity> listReservations(Optional<Long> courtId, Optional<String> phone, boolean futureOnly) {
         var builder = entityManager.getCriteriaBuilder();
         var query = builder.createQuery(ReservationEntity.class);
@@ -127,6 +132,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     }
 
     @Override
+    @Transactional
     public List<ReservationEntity> listReservationsByCourt(long courtId) {
         return entityManager.createQuery("from ReservationEntity where reservedCourtEntity.id = :courtId", ReservationEntity.class)
                 .setParameter("courtId", courtId)

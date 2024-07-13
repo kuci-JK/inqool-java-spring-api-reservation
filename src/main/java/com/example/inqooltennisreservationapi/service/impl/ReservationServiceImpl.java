@@ -7,6 +7,7 @@ import com.example.inqooltennisreservationapi.model.mappers.ReservationMapper;
 import com.example.inqooltennisreservationapi.repository.ReservationRepository;
 import com.example.inqooltennisreservationapi.service.ReservationService;
 import com.example.inqooltennisreservationapi.validation.ReservationValidator;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +29,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
+    @Transactional
     public ReservationDTOs.ReservationResponseDTO getReservation(long id) {
         var entity = reservationRepository.getReservationById(id);
         if (entity.isEmpty()) {
@@ -37,6 +39,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
+    @Transactional
     public ReservationDTOs.ReservationResponseDTO createReservation(ReservationDTOs.ReservationModifyParams reservation) {
         validator.validateReservationRequest(Optional.empty(), reservation);
 
@@ -50,6 +53,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
+    @Transactional
     public ReservationDTOs.ReservationResponseDTO editReservation(long id, ReservationDTOs.ReservationModifyParams reservation) {
         if (!reservationExists(id)) {
             throw new EntityNotFoundException(String.format("Reservation (id: %s) not found", id));
@@ -67,6 +71,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
+    @Transactional
     public ReservationDTOs.ReservationResponseDTO deleteReservation(long id) {
         if (!reservationExists(id)) {
             throw new EntityNotFoundException(String.format("Reservation (id: %s) not found", id));
@@ -80,16 +85,19 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
+    @Transactional
     public List<ReservationDTOs.ReservationResponseDTO> getReservationsOnCourt(long courtId, boolean futureOnly) {
         return reservationRepository.listReservations(courtId, futureOnly).stream().map(reservationMapper::entityToResponseDto).toList();
     }
 
     @Override
+    @Transactional
     public List<ReservationDTOs.ReservationResponseDTO> getReservationsForUser(String phone, boolean futureOnly) {
         return reservationRepository.listReservations(phone, futureOnly).stream().map(reservationMapper::entityToResponseDto).toList();
     }
 
-    private boolean reservationExists(long id) {
+    @Transactional
+    protected boolean reservationExists(long id) {
         return reservationRepository.getReservationById(id).isPresent();
     }
 }

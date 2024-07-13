@@ -6,6 +6,7 @@ import com.example.inqooltennisreservationapi.model.api.CourtDTOs;
 import com.example.inqooltennisreservationapi.model.mappers.CourtMapper;
 import com.example.inqooltennisreservationapi.repository.CourtRepository;
 import com.example.inqooltennisreservationapi.service.CourtService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,7 @@ public class CourtServiceImpl implements CourtService {
 
 
     @Override
+    @Transactional
     public CourtDTOs.CourtResponseDTO getCourt(long id) {
         var entity = courtRepository.getCourtById(id);
         if (entity.isEmpty()) {
@@ -34,6 +36,7 @@ public class CourtServiceImpl implements CourtService {
     }
 
     @Override
+    @Transactional
     public CourtDTOs.CourtResponseDTO createCourt(CourtDTOs.CourtModifyParams courtModifyParams) {
         var newEntity = courtMapper.dtoToEntity(courtModifyParams);
 
@@ -45,6 +48,7 @@ public class CourtServiceImpl implements CourtService {
     }
 
     @Override
+    @Transactional
     public CourtDTOs.CourtResponseDTO editCourt(long id, CourtDTOs.CourtModifyParams courtModifyParams) {
         var entityToSave = courtMapper.dtoToEntity(courtModifyParams);
         entityToSave.setId(id);
@@ -61,6 +65,7 @@ public class CourtServiceImpl implements CourtService {
     }
 
     @Override
+    @Transactional
     public CourtDTOs.CourtResponseDTO deleteCourt(long id) {
         if (!courtExists(id)) {
             throw new EntityNotFoundException(String.format("Court id: %s not found", id));
@@ -74,11 +79,13 @@ public class CourtServiceImpl implements CourtService {
     }
 
     @Override
+    @Transactional
     public List<CourtDTOs.CourtResponseDTO> getAllCourts() {
         return courtRepository.listCourts().stream().map(courtMapper::entityToResponseDto).toList();
     }
 
-    private boolean courtExists(long id) {
+    @Transactional
+    protected boolean courtExists(long id) {
         return courtRepository.getCourtById(id).isPresent();
     }
 }

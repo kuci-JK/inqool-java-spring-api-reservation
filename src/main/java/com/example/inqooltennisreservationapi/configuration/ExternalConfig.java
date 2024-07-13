@@ -1,9 +1,9 @@
 package com.example.inqooltennisreservationapi.configuration;
 
-import com.example.inqooltennisreservationapi.model.entity.CourtEntity;
-import com.example.inqooltennisreservationapi.model.entity.CourtSurfaceEntity;
-import com.example.inqooltennisreservationapi.repository.CourtRepository;
-import com.example.inqooltennisreservationapi.repository.CourtSurfaceRepository;
+import com.example.inqooltennisreservationapi.model.api.CourtDTOs;
+import com.example.inqooltennisreservationapi.model.api.CourtSurfaceDTOs;
+import com.example.inqooltennisreservationapi.service.CourtService;
+import com.example.inqooltennisreservationapi.service.CourtSurfaceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -19,7 +19,7 @@ public class ExternalConfig {
     private static final Logger log = LoggerFactory.getLogger(ExternalConfig.class);
 
     @Bean
-    public CommandLineRunner dataInitRunner(CourtRepository courtRepo, CourtSurfaceRepository surfaceRepo) {
+    public CommandLineRunner dataInitRunner(CourtService courtService, CourtSurfaceService surfaceService) {
 
         return args -> {
             var dataInit = Arrays.asList(args).contains("data-init");
@@ -27,19 +27,22 @@ public class ExternalConfig {
             if (dataInit) {
                 log.info("Starting Data init");
 
-                var surface1 = surfaceRepo
-                        .createCourtSurface(new CourtSurfaceEntity(0, "Clay", 10))
-                        .orElseThrow(DataInitializationFailed::new);
-                var surface2 = surfaceRepo
-                        .createCourtSurface(new CourtSurfaceEntity(0, "Grass", 20))
-                        .orElseThrow(DataInitializationFailed::new);
+                try {
+                    var surface1 = surfaceService.createSurface(new CourtSurfaceDTOs.CourtSurfaceModifyParams("Clay", 10));
+                    var surface2 = surfaceService.createSurface(new CourtSurfaceDTOs.CourtSurfaceModifyParams("Grass", 15));
 
-                courtRepo.createCourt(new CourtEntity(0, "Court 1", surface1)).orElseThrow(DataInitializationFailed::new);
-                courtRepo.createCourt(new CourtEntity(0, "Court 2", surface1)).orElseThrow(DataInitializationFailed::new);
-                courtRepo.createCourt(new CourtEntity(0, "Court 3", surface2)).orElseThrow(DataInitializationFailed::new);
-                courtRepo.createCourt(new CourtEntity(0, "Court 4", surface2)).orElseThrow(DataInitializationFailed::new);
+                    courtService.createCourt(new CourtDTOs.CourtModifyParams("Court 1", surface1.getId()));
+                    courtService.createCourt(new CourtDTOs.CourtModifyParams("Court 2", surface1.getId()));
+                    courtService.createCourt(new CourtDTOs.CourtModifyParams("Court 3", surface2.getId()));
+                    courtService.createCourt(new CourtDTOs.CourtModifyParams("Court 4", surface2.getId()));
 
-                log.info("Finished Data init");
+
+                    log.info("Finished Data init");
+                } catch (Exception e) {
+                    log.error("Failed Data init", e);
+                    throw new DataInitializationFailed();
+                }
+
             }
 
         };

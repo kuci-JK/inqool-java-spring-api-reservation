@@ -6,6 +6,7 @@ import com.example.inqooltennisreservationapi.model.api.CourtSurfaceDTOs;
 import com.example.inqooltennisreservationapi.model.mappers.CourtSurfaceMapper;
 import com.example.inqooltennisreservationapi.repository.CourtSurfaceRepository;
 import com.example.inqooltennisreservationapi.service.CourtSurfaceService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,7 @@ public class CourtSurfaceServiceImpl implements CourtSurfaceService {
     }
 
     @Override
+    @Transactional
     public CourtSurfaceDTOs.CourtSurfaceResponseDTO getSurface(long id) {
         var entity = surfaceRepository.getCourtSurfaceById(id);
         if (entity.isEmpty()) {
@@ -34,6 +36,7 @@ public class CourtSurfaceServiceImpl implements CourtSurfaceService {
 
 
     @Override
+    @Transactional
     public CourtSurfaceDTOs.CourtSurfaceResponseDTO createSurface(CourtSurfaceDTOs.CourtSurfaceModifyParams surface) {
         var entityToSave = courtSurfaceMapper.dtoToEntity(surface);
 
@@ -45,6 +48,7 @@ public class CourtSurfaceServiceImpl implements CourtSurfaceService {
     }
 
     @Override
+    @Transactional
     public CourtSurfaceDTOs.CourtSurfaceResponseDTO editSurface(long id, CourtSurfaceDTOs.CourtSurfaceModifyParams surface) {
         var entityToSave = courtSurfaceMapper.dtoToEntity(surface);
         entityToSave.setId(id);
@@ -61,6 +65,7 @@ public class CourtSurfaceServiceImpl implements CourtSurfaceService {
     }
 
     @Override
+    @Transactional
     public CourtSurfaceDTOs.CourtSurfaceResponseDTO deleteSurface(long id) {
         if (!surfaceExists(id)) {
             throw new EntityNotFoundException(String.format("Court surface with id %s not found", id));
@@ -73,12 +78,14 @@ public class CourtSurfaceServiceImpl implements CourtSurfaceService {
     }
 
     @Override
+    @Transactional
     public List<CourtSurfaceDTOs.CourtSurfaceResponseDTO> getAllSurfaces() {
         var res = surfaceRepository.listCourtSurfaces();
         return res.stream().map(courtSurfaceMapper::entityToResponseDto).toList();
     }
 
-    private boolean surfaceExists(long id) {
+    @Transactional
+    protected boolean surfaceExists(long id) {
         return surfaceRepository.getCourtSurfaceById(id).isPresent();
     }
 }

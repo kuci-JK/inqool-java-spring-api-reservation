@@ -63,6 +63,7 @@ public class CourtSurfaceRepositoryImpl implements CourtSurfaceRepository {
     }
 
     @Override
+    @Transactional
     public Optional<CourtSurfaceEntity> getCourtSurfaceById(long id) {
         if (!entityExists(entityManager, CourtSurfaceEntity.class, id)) {
             return Optional.empty();
@@ -71,6 +72,7 @@ public class CourtSurfaceRepositoryImpl implements CourtSurfaceRepository {
     }
 
     @Override
+    @Transactional
     public List<CourtSurfaceEntity> listCourtSurfaces() {
 
         var builder = entityManager.getCriteriaBuilder();

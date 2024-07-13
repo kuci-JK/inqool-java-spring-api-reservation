@@ -5,6 +5,7 @@ import com.example.inqooltennisreservationapi.repository.UserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -16,6 +17,7 @@ public class UserRepositoryImpl implements UserRepository {
     private EntityManager entityManager;
 
     @Override
+    @Transactional
     public Optional<UserEntity> getUserByPhone(String phone) {
         var builder = entityManager.getCriteriaBuilder();
         var query = builder.createQuery(UserEntity.class);
