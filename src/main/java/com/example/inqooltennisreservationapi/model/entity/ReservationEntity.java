@@ -31,7 +31,6 @@ public class ReservationEntity extends SoftDeletableEntity {
 
     @NonNull
     @Column(name = "reservation_end", nullable = false)
-    // TODO validate reservationStart < reservationEnd...
     private LocalDateTime reservationEnd;
 
     @NonNull

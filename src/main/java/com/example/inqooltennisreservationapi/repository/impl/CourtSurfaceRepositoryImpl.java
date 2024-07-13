@@ -1,5 +1,6 @@
 package com.example.inqooltennisreservationapi.repository.impl;
 
+import com.example.inqooltennisreservationapi.exceptions.DatabaseException;
 import com.example.inqooltennisreservationapi.model.entity.CourtSurfaceEntity;
 import com.example.inqooltennisreservationapi.repository.CourtRepository;
 import com.example.inqooltennisreservationapi.repository.CourtSurfaceRepository;
@@ -53,8 +54,8 @@ public class CourtSurfaceRepositoryImpl implements CourtSurfaceRepository {
             return Optional.empty();
         }
 
-        for (var court : courtRepo.listCourtsBySurface(id)) {
-            courtRepo.deleteCourt(court.getId());
+        if (!courtRepo.listCourtsBySurface(id).isEmpty()) {
+            throw new DatabaseException("Cannot delete court surface that is in use");
         }
 
         courtSurfaceEntity.setDeleted(true);

@@ -62,7 +62,6 @@ public class CourtSurfaceServiceImpl implements CourtSurfaceService {
 
     @Override
     public CourtSurfaceDTOs.CourtSurfaceResponseDTO deleteSurface(long id) {
-        // TODO need to soft delete courts, reservations... or disable if used...
         if (!surfaceExists(id)) {
             throw new EntityNotFoundException(String.format("Court surface with id %s not found", id));
         }

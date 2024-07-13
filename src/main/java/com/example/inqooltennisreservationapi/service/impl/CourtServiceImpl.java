@@ -46,7 +46,6 @@ public class CourtServiceImpl implements CourtService {
 
     @Override
     public CourtDTOs.CourtResponseDTO editCourt(long id, CourtDTOs.CourtModifyParams courtModifyParams) {
-        // TODO disable surface edit when reservation in the future... ?
         var entityToSave = courtMapper.dtoToEntity(courtModifyParams);
         entityToSave.setId(id);
 
@@ -63,7 +62,6 @@ public class CourtServiceImpl implements CourtService {
 
     @Override
     public CourtDTOs.CourtResponseDTO deleteCourt(long id) {
-        // TODO need to soft delete reservations... or disable if used...
         if (!courtExists(id)) {
             throw new EntityNotFoundException(String.format("Court id: %s not found", id));
         }
