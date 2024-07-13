@@ -1,5 +1,6 @@
 package com.example.inqooltennisreservationapi.controller.error;
 
+import com.example.inqooltennisreservationapi.exceptions.DatabaseException;
 import com.example.inqooltennisreservationapi.exceptions.EntityNotFoundException;
 import com.example.inqooltennisreservationapi.exceptions.InvalidRequestException;
 import com.example.inqooltennisreservationapi.model.api.ApiErrorDTO;
@@ -8,7 +9,6 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
-import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -69,8 +69,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return getResponseEntityFromException(ex, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(DataAccessException.class)
-    protected ResponseEntity<Object> handleDataAccessException(DataAccessException ex) {
+    @ExceptionHandler(DatabaseException.class)
+    protected ResponseEntity<Object> handleDataAccessException(DatabaseException ex) {
         return getResponseEntityFromException(ex, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
