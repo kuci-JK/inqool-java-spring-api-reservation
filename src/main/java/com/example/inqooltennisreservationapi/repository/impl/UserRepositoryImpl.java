@@ -5,6 +5,7 @@ import com.example.inqooltennisreservationapi.repository.UserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceException;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -16,29 +17,7 @@ public class UserRepositoryImpl implements UserRepository {
     private EntityManager entityManager;
 
     @Override
-    public Optional<UserEntity> createUser(UserEntity userEntity) {
-        entityManager.persist(userEntity);
-        return Optional.of(userEntity);
-    }
-
-    @Override
-    public Optional<UserEntity> deleteUser(long id) {
-        var existing = entityManager.find(UserEntity.class, id);
-        if (existing == null) {
-            return Optional.empty();
-        }
-
-        existing.setDeleted(true);
-        var res = entityManager.merge(existing);
-        return Optional.of(res);
-    }
-
-    @Override
-    public Optional<UserEntity> getUserById(long id) {
-        return Optional.ofNullable(entityManager.find(UserEntity.class, id));
-    }
-
-    @Override
+    @Transactional
     public Optional<UserEntity> getUserByPhone(String phone) {
         var builder = entityManager.getCriteriaBuilder();
         var query = builder.createQuery(UserEntity.class);

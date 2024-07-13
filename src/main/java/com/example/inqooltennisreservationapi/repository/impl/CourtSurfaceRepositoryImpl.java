@@ -27,7 +27,7 @@ public class CourtSurfaceRepositoryImpl implements CourtSurfaceRepository {
     @Transactional
     public Optional<CourtSurfaceEntity> updateCourtSurface(long id, CourtSurfaceEntity updatedCourtSurfaceEntity) {
         CourtSurfaceEntity existingCourtSurfaceEntity = entityManager.find(CourtSurfaceEntity.class, id);
-        if (existingCourtSurfaceEntity == null) {
+        if (existingCourtSurfaceEntity == null || existingCourtSurfaceEntity.isDeleted()) {
             return Optional.empty();
         }
 
@@ -41,7 +41,7 @@ public class CourtSurfaceRepositoryImpl implements CourtSurfaceRepository {
     @Transactional
     public Optional<CourtSurfaceEntity> deleteCourtSurface(long id) {
         CourtSurfaceEntity courtSurfaceEntity = entityManager.find(CourtSurfaceEntity.class, id);
-        if (courtSurfaceEntity == null) {
+        if (courtSurfaceEntity == null || courtSurfaceEntity.isDeleted()) {
             return Optional.empty();
         }
         // TODO also remove used ??
@@ -56,8 +56,17 @@ public class CourtSurfaceRepositoryImpl implements CourtSurfaceRepository {
 
     @Override
     public List<CourtSurfaceEntity> listCourtSurfaces() {
-        // TODO decide order...
-        // TODO exclude deleted
-        return entityManager.createQuery("from CourtSurfaceEntity", CourtSurfaceEntity.class).getResultList();
+
+        var builder = entityManager.getCriteriaBuilder();
+        var query = builder.createQuery(CourtSurfaceEntity.class);
+        var root = query.from(CourtSurfaceEntity.class);
+
+        query.where(
+                entityNotDeletetPredicate(builder, root)
+        );
+        query.orderBy(builder.asc(root.get("id")));
+
+        query.select(root);
+        return entityManager.createQuery(query).getResultList();
     }
 }

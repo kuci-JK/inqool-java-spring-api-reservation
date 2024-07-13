@@ -4,13 +4,7 @@ import com.example.inqooltennisreservationapi.model.entity.UserEntity;
 
 import java.util.Optional;
 
-public interface UserRepository {
-
-    Optional<UserEntity> createUser(UserEntity userEntity);
-
-    Optional<UserEntity> deleteUser(long id);
-
-    Optional<UserEntity> getUserById(long id);
+public interface UserRepository extends RepositoryForSoftDeletableEntity {
 
     Optional<UserEntity> getUserByPhone(String phone);
 

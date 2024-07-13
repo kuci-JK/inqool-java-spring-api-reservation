@@ -4,6 +4,7 @@ import com.example.inqooltennisreservationapi.model.entity.CourtEntity;
 import com.example.inqooltennisreservationapi.repository.CourtRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,15 +17,17 @@ public class CourtRepositoryImpl implements CourtRepository {
     private EntityManager entityManager;
 
     @Override
+    @Transactional
     public Optional<CourtEntity> createCourt(CourtEntity courtEntity) {
         entityManager.persist(courtEntity);
         return Optional.of(courtEntity);
     }
 
     @Override
+    @Transactional
     public Optional<CourtEntity> updateCourt(long id, CourtEntity updatedCourtEntity) {
         var existing = entityManager.find(CourtEntity.class, id);
-        if (existing == null) {
+        if (existing == null || existing.isDeleted()) {
             return Optional.empty();
         }
         existing.setName(updatedCourtEntity.getName());
@@ -35,9 +38,10 @@ public class CourtRepositoryImpl implements CourtRepository {
     }
 
     @Override
+    @Transactional
     public Optional<CourtEntity> deleteCourt(long id) {
         var existing = entityManager.find(CourtEntity.class, id);
-        if (existing == null) {
+        if (existing == null || existing.isDeleted()) {
             return Optional.empty();
         }
         existing.setDeleted(true);
@@ -46,13 +50,16 @@ public class CourtRepositoryImpl implements CourtRepository {
 
     @Override
     public Optional<CourtEntity> getCourtById(long id) {
+        if (!entityExists(entityManager, CourtEntity.class, id)) {
+            return Optional.empty();
+        }
         return Optional.ofNullable(entityManager.find(CourtEntity.class, id));
     }
 
     @Override
     public List<CourtEntity> listCourts() {
-        // TODO change ordering ?
-        // TODO exclude deleted
-        return entityManager.createQuery("from CourtEntity order by name asc", CourtEntity.class).getResultList();
+        return entityManager.createQuery(
+                "from CourtEntity where deleted = false order by name asc", CourtEntity.class
+        ).getResultList();
     }
 }

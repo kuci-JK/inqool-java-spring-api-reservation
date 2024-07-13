@@ -6,6 +6,7 @@ import com.example.inqooltennisreservationapi.repository.ReservationRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.Predicate;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -20,15 +21,17 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     private EntityManager entityManager;
 
     @Override
+    @Transactional
     public Optional<ReservationEntity> createReservation(ReservationEntity reservationEntity) {
         entityManager.persist(reservationEntity);
         return Optional.of(reservationEntity);
     }
 
     @Override
+    @Transactional
     public Optional<ReservationEntity> updateReservation(long id, ReservationEntity updatedReservationEntity) {
         var existingReservation = entityManager.find(ReservationEntity.class, id);
-        if (existingReservation == null) {
+        if (existingReservation == null || existingReservation.isDeleted()) {
             return Optional.empty();
         }
         existingReservation.setCreatedDate(updatedReservationEntity.getCreatedDate());
@@ -43,9 +46,10 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     }
 
     @Override
+    @Transactional
     public Optional<ReservationEntity> deleteReservation(long id) {
         var existingReservation = entityManager.find(ReservationEntity.class, id);
-        if (existingReservation == null) {
+        if (existingReservation == null || existingReservation.isDeleted()) {
             return Optional.empty();
         }
         existingReservation.setDeleted(true);
@@ -54,6 +58,9 @@ public class ReservationRepositoryImpl implements ReservationRepository {
 
     @Override
     public Optional<ReservationEntity> getReservationById(long id) {
+        if (!entityExists(entityManager, ReservationEntity.class, id)) {
+            return Optional.empty();
+        }
         return Optional.ofNullable(entityManager.find(ReservationEntity.class, id));
     }
 
@@ -71,7 +78,6 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     public boolean overlapsExistingReservations(
             long courtId, LocalDateTime from, LocalDateTime to, Optional<Long> ignoreReservationId
     ) {
-        // TODO builder.parameter ?? to prevent sql injection?
         var builder = entityManager.getCriteriaBuilder();
         var query = builder.createQuery(ReservationEntity.class);
         var root = query.from(ReservationEntity.class);
@@ -96,9 +102,9 @@ public class ReservationRepositoryImpl implements ReservationRepository {
         var query = builder.createQuery(ReservationEntity.class);
         var root = query.from(ReservationEntity.class);
 
-        // TODO exclude deleted
-
         List<Predicate> predicates = new ArrayList<>();
+        predicates.add(entityNotDeletetPredicate(builder, root));
+
         courId.ifPresent(aLong -> {
             predicates.add(builder.equal(root.get("reservedCourtEntity").get("id"), aLong));
             query.orderBy(builder.asc(root.get("createdDate")));

@@ -5,7 +5,7 @@ import com.example.inqooltennisreservationapi.model.entity.CourtSurfaceEntity;
 import java.util.List;
 import java.util.Optional;
 
-public interface CourtSurfaceRepository {
+public interface CourtSurfaceRepository extends RepositoryForSoftDeletableEntity {
 
     Optional<CourtSurfaceEntity> createCourtSurface(CourtSurfaceEntity courtSurfaceEntity);
 
