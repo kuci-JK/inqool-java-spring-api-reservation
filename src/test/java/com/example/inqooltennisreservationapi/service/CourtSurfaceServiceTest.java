@@ -110,7 +110,21 @@ public class CourtSurfaceServiceTest {
     }
 
     @Test
-    void updateSurface_invalidId() {
+    void updateSurface_notFound() {
+        var request = getValidSurfaceParams("Clay", 10);
+
+        given(repo.getCourtSurfaceById(1)).willReturn(Optional.empty());
+
+        try {
+            service.editSurface(1, request);
+            fail();
+        } catch (EntityNotFoundException e) {
+            // pass
+        }
+    }
+
+    @Test
+    void updateSurface_editFails() {
         var request = getValidSurfaceParams("Clay", 10);
         var entity = new CourtSurfaceEntity(1, "Clay", 10);
 
