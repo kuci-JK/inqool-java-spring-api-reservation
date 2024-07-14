@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.example</groupId>
-    <artifactId>inQool-tennis-reservatiion-api</artifactId>
+    <artifactId>inQool-tennis-reservation-api</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>inQool-tennis-reservation-api</name>
     <description>inQool-tennis-reservation-api</description>
