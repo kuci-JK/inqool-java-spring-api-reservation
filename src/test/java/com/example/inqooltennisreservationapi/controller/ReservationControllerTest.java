@@ -54,6 +54,22 @@ public class ReservationControllerTest {
     }
 
     @Test
+    public void listForCourt_idNegative() throws Exception {
+
+        mvc.perform(get("/reservations?courtId=-1"))
+                .andExpect(status().isBadRequest())
+        ;
+    }
+
+    @Test
+    public void listForUser_phoneEmpty() throws Exception {
+
+        mvc.perform(get("/reservations?phone="))
+                .andExpect(status().isBadRequest())
+        ;
+    }
+
+    @Test
     public void listForUser_empty() throws Exception {
         List<ReservationDTOs.ReservationResponseDTO> expected = List.of();
 
