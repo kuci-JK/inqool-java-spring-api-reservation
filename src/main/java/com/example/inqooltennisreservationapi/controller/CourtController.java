@@ -5,6 +5,7 @@ import com.example.inqooltennisreservationapi.service.CourtService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +29,7 @@ public class CourtController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public CourtDTOs.CourtResponseDTO createCourt(@RequestBody @Valid CourtDTOs.CourtModifyParams params) {
         return service.createCourt(params);
     }
