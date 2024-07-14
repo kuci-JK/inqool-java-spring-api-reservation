@@ -11,12 +11,4 @@ public class InvalidRequestException extends ExceptionWithMessagePrefix {
     public InvalidRequestException(String message) {
         super(MESSAGE_PREFIX, message);
     }
-
-    public InvalidRequestException(String message, Throwable cause) {
-        super(MESSAGE_PREFIX, message, cause);
-    }
-
-    public InvalidRequestException(Throwable cause) {
-        super(MESSAGE_PREFIX, cause);
-    }
 }

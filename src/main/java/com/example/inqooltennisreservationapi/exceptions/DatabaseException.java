@@ -11,13 +11,4 @@ public class DatabaseException extends ExceptionWithMessagePrefix {
     public DatabaseException(String message) {
         super(MESSAGE_PREFIX, message);
     }
-
-    public DatabaseException(String message, Throwable cause) {
-        super(MESSAGE_PREFIX, message, cause);
-    }
-
-    public DatabaseException(Throwable cause) {
-        super(MESSAGE_PREFIX, cause);
-    }
-
 }

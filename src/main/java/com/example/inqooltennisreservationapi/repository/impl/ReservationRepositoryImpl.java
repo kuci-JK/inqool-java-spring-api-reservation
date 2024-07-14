@@ -35,7 +35,6 @@ public class ReservationRepositoryImpl implements ReservationRepository {
         if (existingReservation == null || existingReservation.isDeleted()) {
             return Optional.empty();
         }
-        existingReservation.setCreatedDate(updatedReservationEntity.getCreatedDate());
         existingReservation.setReservationStart(updatedReservationEntity.getReservationStart());
         existingReservation.setReservationEnd(updatedReservationEntity.getReservationEnd());
         existingReservation.setGameType(updatedReservationEntity.getGameType());

@@ -11,14 +11,6 @@ public class ExceptionWithMessagePrefix extends RuntimeException {
         super(applyMessagePrefix(messagePrefix, message));
     }
 
-    public ExceptionWithMessagePrefix(String messagePrefix, String message, Throwable cause) {
-        super(applyMessagePrefix(messagePrefix, message), cause);
-    }
-
-    public ExceptionWithMessagePrefix(String messagePrefix, Throwable cause) {
-        super(messagePrefix, cause);
-    }
-
     private static String applyMessagePrefix(String prefix, String message) {
         return prefix + ": " + message;
     }

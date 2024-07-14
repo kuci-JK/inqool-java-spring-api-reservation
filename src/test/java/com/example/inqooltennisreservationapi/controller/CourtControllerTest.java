@@ -246,4 +246,16 @@ public class CourtControllerTest {
         mvc.perform(delete("/courts/1"))
                 .andExpect(status().isNotFound());
     }
+
+    @Test
+    void invalidUrl() throws Exception {
+        mvc.perform(get("/invalid_url"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void invalidMethod() throws Exception {
+        mvc.perform(patch("/courts/1"))
+                .andExpect(status().isMethodNotAllowed());
+    }
 }
