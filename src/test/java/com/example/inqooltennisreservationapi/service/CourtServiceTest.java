@@ -180,7 +180,7 @@ public class CourtServiceTest {
     }
 
     @Test
-    void delete_surfaceNotExists() {
+    void delete_notExists() {
 
         given(repo.getCourtById(1)).willReturn(Optional.empty());
 
