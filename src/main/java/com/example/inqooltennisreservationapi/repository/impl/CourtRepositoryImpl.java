@@ -11,7 +11,6 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,7 +56,6 @@ public class CourtRepositoryImpl implements CourtRepository {
             return Optional.empty();
         }
 
-        var now = LocalDateTime.now();
         var reservations = reservationRepo.listReservations(id, true);
         if (!reservations.isEmpty()) {
             throw new DatabaseException("Cannot delete court. Court has non finished reservations");
