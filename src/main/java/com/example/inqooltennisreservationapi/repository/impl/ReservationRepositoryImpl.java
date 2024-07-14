@@ -25,7 +25,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     @Transactional
     public Optional<ReservationEntity> createReservation(ReservationEntity reservationEntity) {
         entityManager.persist(reservationEntity);
-        return Optional.of(entityManager.find(ReservationEntity.class, reservationEntity.getId()));
+        return Optional.of(reservationEntity);
     }
 
     @Override

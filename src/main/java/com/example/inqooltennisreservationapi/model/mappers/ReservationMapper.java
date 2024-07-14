@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Component
@@ -34,6 +35,7 @@ public class ReservationMapper {
 
     private static @NotNull ReservationEntity getReservationEntity(ReservationDTOs.@NotNull ReservationModifyParams reservationModifyParams, @NotNull CourtEntity court, @NotNull Optional<UserEntity> user) {
         var reservation = new ReservationEntity();
+        reservation.setCreatedDate(LocalDateTime.now());
         reservation.setReservationStart(reservationModifyParams.getReservationStart());
         reservation.setReservationEnd(reservationModifyParams.getReservationEnd());
         reservation.setGameType(reservationModifyParams.getGameType());
