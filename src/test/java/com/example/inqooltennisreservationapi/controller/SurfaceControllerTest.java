@@ -4,18 +4,15 @@ import com.example.inqooltennisreservationapi.exceptions.DatabaseException;
 import com.example.inqooltennisreservationapi.exceptions.EntityNotFoundException;
 import com.example.inqooltennisreservationapi.model.api.CourtSurfaceDTOs;
 import com.example.inqooltennisreservationapi.service.CourtSurfaceService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import java.util.List;
 
+import static com.example.inqooltennisreservationapi.TestUtil.*;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -30,32 +27,6 @@ public class SurfaceControllerTest {
 
     @MockBean
     private CourtSurfaceService service;
-
-    private static CourtSurfaceDTOs.CourtSurfaceResponseDTO getValidSurfaceResponse(long id, String surfaceName, double pricePerMinute) {
-        return new CourtSurfaceDTOs.CourtSurfaceResponseDTO(
-                id, surfaceName, pricePerMinute, false
-        );
-    }
-
-    private static CourtSurfaceDTOs.CourtSurfaceModifyParams getValidRequestParams(String surfaceName, double pricePerMinute) {
-        return new CourtSurfaceDTOs.CourtSurfaceModifyParams(
-                surfaceName,
-                pricePerMinute
-        );
-    }
-
-    private static MockHttpServletRequestBuilder applyHeadersAndContent(MockHttpServletRequestBuilder builder, Object body) throws JsonProcessingException {
-        builder.contentType(MediaType.APPLICATION_JSON);
-        if (body != null) {
-            builder.content(new ObjectMapper().writeValueAsString(body));
-        }
-
-        return builder;
-    }
-
-    private static MockHttpServletRequestBuilder applyHeaders(MockHttpServletRequestBuilder builder) throws JsonProcessingException {
-        return applyHeadersAndContent(builder, null);
-    }
 
     @Test
     public void list_empty() throws Exception {
@@ -125,7 +96,7 @@ public class SurfaceControllerTest {
     @Test
     void createSurface_valid() throws Exception {
 
-        var request = getValidRequestParams("Clay", 10);
+        var request = getValidSurfaceParams("Clay", 10);
 
         given(service.createSurface(request)).willReturn(getValidSurfaceResponse(1, "Clay", 10));
 
@@ -139,7 +110,7 @@ public class SurfaceControllerTest {
 
     @Test
     void createSurface_invalidName() throws Exception {
-        var request = getValidRequestParams("", 10);
+        var request = getValidSurfaceParams("", 10);
 
         mvc.perform(applyHeadersAndContent(post("/surfaces"), request))
                 .andExpect(status().isBadRequest());
@@ -147,7 +118,7 @@ public class SurfaceControllerTest {
 
     @Test
     void createSurface_invalidPrice_negative() throws Exception {
-        var request = getValidRequestParams("Clay", -10);
+        var request = getValidSurfaceParams("Clay", -10);
 
         mvc.perform(applyHeadersAndContent(post("/surfaces"), request))
                 .andExpect(status().isBadRequest());
@@ -155,7 +126,7 @@ public class SurfaceControllerTest {
 
     @Test
     void createSurface_invalidPrice_zero() throws Exception {
-        var request = getValidRequestParams("", 0);
+        var request = getValidSurfaceParams("", 0);
 
         mvc.perform(applyHeadersAndContent(post("/surfaces"), request))
                 .andExpect(status().isBadRequest());
@@ -172,7 +143,7 @@ public class SurfaceControllerTest {
     @Test
     void updateSurface_valid() throws Exception {
 
-        var request = getValidRequestParams("Clay", 10);
+        var request = getValidSurfaceParams("Clay", 10);
 
         given(service.editSurface(1, request)).willReturn(getValidSurfaceResponse(1, "Clay", 10));
 
@@ -186,7 +157,7 @@ public class SurfaceControllerTest {
 
     @Test
     void updateSurface_invalidId() throws Exception {
-        var request = getValidRequestParams("Clay", 10);
+        var request = getValidSurfaceParams("Clay", 10);
 
         mvc.perform(applyHeadersAndContent(put("/surfaces/invalid_id"), request))
                 .andExpect(status().isBadRequest());
@@ -194,7 +165,7 @@ public class SurfaceControllerTest {
 
     @Test
     void updateSurface_surfaceDoesNotExist() throws Exception {
-        var request = getValidRequestParams("Clay", 10);
+        var request = getValidSurfaceParams("Clay", 10);
 
         given(service.editSurface(1, request)).willThrow(new EntityNotFoundException());
 
@@ -204,7 +175,7 @@ public class SurfaceControllerTest {
 
     @Test
     void updateSurface_invalidName() throws Exception {
-        var request = getValidRequestParams("", 10);
+        var request = getValidSurfaceParams("", 10);
 
         mvc.perform(applyHeadersAndContent(put("/surfaces/1"), request))
                 .andExpect(status().isBadRequest());
@@ -212,7 +183,7 @@ public class SurfaceControllerTest {
 
     @Test
     void updateSurface_invalidPrice_negative() throws Exception {
-        var request = getValidRequestParams("Clay", -10);
+        var request = getValidSurfaceParams("Clay", -10);
 
         mvc.perform(applyHeadersAndContent(put("/surfaces/1"), request))
                 .andExpect(status().isBadRequest());
@@ -220,7 +191,7 @@ public class SurfaceControllerTest {
 
     @Test
     void updateSurface_invalidPrice_zero() throws Exception {
-        var request = getValidRequestParams("", 0);
+        var request = getValidSurfaceParams("", 0);
 
         mvc.perform(applyHeadersAndContent(put("/surfaces/1"), request))
                 .andExpect(status().isBadRequest());
