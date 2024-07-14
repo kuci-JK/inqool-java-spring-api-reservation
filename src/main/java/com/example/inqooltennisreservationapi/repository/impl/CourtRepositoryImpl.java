@@ -58,8 +58,8 @@ public class CourtRepositoryImpl implements CourtRepository {
         }
 
         var now = LocalDateTime.now();
-        var reservations = reservationRepo.listReservationsByCourt(id);
-        if (reservations.stream().anyMatch(r -> now.isBefore(r.getReservationEnd()))) {
+        var reservations = reservationRepo.listReservations(id, true);
+        if (!reservations.isEmpty()) {
             throw new DatabaseException("Cannot delete court. Court has non finished reservations");
         }
 

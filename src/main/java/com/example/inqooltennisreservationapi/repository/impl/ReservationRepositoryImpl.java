@@ -130,12 +130,4 @@ public class ReservationRepositoryImpl implements ReservationRepository {
         phone.ifPresent(s -> actualQuery.setParameter("phone", s));
         return actualQuery.getResultList();
     }
-
-    @Override
-    @Transactional
-    public List<ReservationEntity> listReservationsByCourt(long courtId) {
-        return entityManager.createQuery("from ReservationEntity where reservedCourtEntity.id = :courtId", ReservationEntity.class)
-                .setParameter("courtId", courtId)
-                .getResultList();
-    }
 }

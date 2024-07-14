@@ -20,8 +20,6 @@ public interface ReservationRepository extends RepositoryForSoftDeletableEntity 
 
     List<ReservationEntity> listReservations(String phone, boolean futureOnly);
 
-    List<ReservationEntity> listReservationsByCourt(long courtId);
-
     boolean overlapsExistingReservations(
             long courtId, LocalDateTime from, LocalDateTime to, Optional<Long> ignoreReservationId
     );
