@@ -72,7 +72,7 @@ public class CourtServiceTest {
         given(repo.getCourtById(1)).willReturn(Optional.empty());
 
         try {
-            var res = service.getCourt(1);
+            service.getCourt(1);
             fail(); // should not reach here
         } catch (EntityNotFoundException e) {
             // ignore
@@ -193,7 +193,7 @@ public class CourtServiceTest {
     }
 
     @Test
-    void delete_deleteFails() throws Exception {
+    void delete_deleteFails() {
         var surface = new CourtSurfaceEntity(1, "Clay", 10);
         var entity = new CourtEntity(1, "Court", surface);
 

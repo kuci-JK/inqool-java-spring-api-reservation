@@ -62,7 +62,7 @@ public class CourtSurfaceServiceTest {
         given(repo.getCourtSurfaceById(1)).willReturn(Optional.empty());
 
         try {
-            var res = service.getSurface(1);
+            service.getSurface(1);
             fail(); // should not reach here
         } catch (EntityNotFoundException e) {
             // ignore
@@ -166,8 +166,7 @@ public class CourtSurfaceServiceTest {
     }
 
     @Test
-    void deleteSurface_deleteFails() throws Exception {
-        var request = getValidSurfaceParams("Clay", 10);
+    void deleteSurface_deleteFails() {
         var entity = new CourtSurfaceEntity(1, "Clay", 10);
 
         given(repo.getCourtSurfaceById(1)).willReturn(Optional.of(entity));

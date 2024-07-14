@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 
 public class TestUtil {
 
-    private static LocalDateTime time = LocalDateTime.now();
+    private static final LocalDateTime time = LocalDateTime.now();
 
     public static MockHttpServletRequestBuilder applyHeadersAndContent(MockHttpServletRequestBuilder builder, Object body) throws JsonProcessingException {
         var mapper = new ObjectMapper();
