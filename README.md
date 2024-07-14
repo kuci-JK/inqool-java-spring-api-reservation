@@ -17,7 +17,7 @@ git clone git@github.com:kuci-JK/inqool-java-spring-api-reservation.git
 ## 2. Build
 
 ```sh
-./mnvw package
+./mvnw package
 ```
 
 ## 3. Run
