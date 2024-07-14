@@ -1,6 +1,7 @@
 package com.example.inqooltennisreservationapi.model.api;
 
 import com.example.inqooltennisreservationapi.model.GameType;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.FutureOrPresent;
@@ -24,6 +25,7 @@ public class ReservationDTOs {
 
         @NotNull
         @Future(message = "Reservation cannot end in the past")
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
         private LocalDateTime reservationEnd;
 
         @NotNull
@@ -42,13 +44,25 @@ public class ReservationDTOs {
     @NoArgsConstructor
     public static class ReservationResponseDTO {
         private long id;
+
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
         private LocalDateTime created;
+
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
         private LocalDateTime reservationStart;
+
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
         private LocalDateTime reservationEnd;
+
         private GameType gameType;
+
         private double price;
+
         private CourtDTOs.CourtResponseDTO court;
+
         private UserDTOs.UserResponseDTO customer;
+
+        private boolean deleted;
     }
 
 }

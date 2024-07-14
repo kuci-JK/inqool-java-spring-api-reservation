@@ -57,7 +57,8 @@ public class ReservationMapper {
                 reservation.getGameType(),
                 reservation.getTotalPrice(),
                 courtMapper.entityToResponseDto(reservation.getReservedCourtEntity()),
-                userMapper.entityToResponseDto(reservation.getUserEntity())
+                userMapper.entityToResponseDto(reservation.getUserEntity()),
+                reservation.isDeleted()
         );
     }
 
