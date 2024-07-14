@@ -129,7 +129,9 @@ public class CourtServiceTest {
     @Test
     void update_notFound() {
         var request = getValidCourtParams("Court", 1);
+        var surface = new CourtSurfaceEntity(1, "Clay", 10);
 
+        given(surfaceRepo.getCourtSurfaceById(1)).willReturn(Optional.of(surface));
         given(repo.getCourtById(1)).willReturn(Optional.empty());
 
         try {
