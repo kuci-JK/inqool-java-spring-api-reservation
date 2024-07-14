@@ -102,7 +102,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     }
 
     @Transactional
-    private List<ReservationEntity> listReservations(Optional<Long> courtId, Optional<String> phone, boolean futureOnly) {
+    protected List<ReservationEntity> listReservations(Optional<Long> courtId, Optional<String> phone, boolean futureOnly) {
         var builder = entityManager.getCriteriaBuilder();
         var query = builder.createQuery(ReservationEntity.class);
         var root = query.from(ReservationEntity.class);
