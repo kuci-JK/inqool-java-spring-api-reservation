@@ -34,19 +34,18 @@ public class ReservationMapper {
     }
 
     private static @NotNull ReservationEntity getReservationEntity(ReservationDTOs.@NotNull ReservationModifyParams reservationModifyParams, @NotNull CourtEntity court, @NotNull Optional<UserEntity> user) {
-        var reservation = new ReservationEntity();
-        reservation.setCreatedDate(LocalDateTime.now());
-        reservation.setReservationStart(reservationModifyParams.getReservationStart());
-        reservation.setReservationEnd(reservationModifyParams.getReservationEnd());
-        reservation.setGameType(reservationModifyParams.getGameType());
-        reservation.setReservedCourtEntity(court);
-        reservation.setUserEntity(
+        return new ReservationEntity(
+                0,
+                LocalDateTime.now(),
+                reservationModifyParams.getReservationStart(),
+                reservationModifyParams.getReservationEnd(),
+                reservationModifyParams.getGameType(),
+                court,
                 user.orElse(new UserEntity(
                         reservationModifyParams.getCustomer().getName(),
                         reservationModifyParams.getCustomer().getPhone())
                 )
         );
-        return reservation;
     }
 
     public @NotNull ReservationDTOs.ReservationResponseDTO entityToResponseDto(@NotNull ReservationEntity reservation) {
