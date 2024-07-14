@@ -54,7 +54,7 @@ public class CourtSurfaceRepositoryImpl implements CourtSurfaceRepository {
             return Optional.empty();
         }
 
-        if (!courtRepo.listCourtsBySurface(id).isEmpty()) {
+        if (!courtRepo.listCourtsForSurface(id).isEmpty()) {
             throw new DatabaseException("Cannot delete court surface that is in use");
         }
 

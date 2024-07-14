@@ -78,7 +78,7 @@ public class CourtRepositoryImpl implements CourtRepository {
 
     @Override
     @Transactional
-    public List<CourtEntity> listCourtsBySurface(long surfaceId) {
+    public List<CourtEntity> listCourtsForSurface(long surfaceId) {
         var builder = entityManager.getCriteriaBuilder();
         var query = builder.createQuery(CourtEntity.class);
         var root = query.from(CourtEntity.class);
