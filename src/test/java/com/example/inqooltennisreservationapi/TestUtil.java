@@ -1,5 +1,6 @@
 package com.example.inqooltennisreservationapi;
 
+import com.example.inqooltennisreservationapi.model.api.CourtDTOs;
 import com.example.inqooltennisreservationapi.model.api.CourtSurfaceDTOs;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,6 +32,19 @@ public class TestUtil {
         return new CourtSurfaceDTOs.CourtSurfaceModifyParams(
                 surfaceName,
                 pricePerMinute
+        );
+    }
+
+    public static CourtDTOs.CourtResponseDTO getValidCourtResponse(long id, String name, CourtSurfaceDTOs.CourtSurfaceResponseDTO surface) {
+        return new CourtDTOs.CourtResponseDTO(
+                id, name, surface, false
+        );
+    }
+
+    public static CourtDTOs.CourtModifyParams getValidCourtParams(String name, long surfaceId) {
+        return new CourtDTOs.CourtModifyParams(
+                name,
+                surfaceId
         );
     }
 
