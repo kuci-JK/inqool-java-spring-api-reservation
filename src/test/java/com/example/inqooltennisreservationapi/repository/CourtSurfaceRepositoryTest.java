@@ -126,7 +126,8 @@ public class CourtSurfaceRepositoryTest {
         var id = repo.createCourtSurface(new CourtSurfaceEntity(0, params.getSurfaceName(), params.getPricePerMinute())).orElseThrow().getId();
 
         var res = repo.deleteCourtSurface(id);
-        assertTrue(res.isEmpty());
+        assertTrue(res.isPresent());
+        assertTrue(res.get().isDeleted());
 
         var res2 = repo.deleteCourtSurface(id);
         assertTrue(res2.isEmpty());

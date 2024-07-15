@@ -216,7 +216,8 @@ public class ReservationRepositoryTest {
         var id = repo.createReservation(reservationEntity).orElseThrow().getId();
 
         var res = repo.deleteReservation(id);
-        assertTrue(res.isEmpty());
+        assertTrue(res.isPresent());
+        assertTrue(res.get().isDeleted());
 
         var res2 = repo.deleteReservation(id);
         assertTrue(res2.isEmpty());

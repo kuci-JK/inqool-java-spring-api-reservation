@@ -163,7 +163,8 @@ public class CourtRepositoryTest {
         var id = repo.createCourt(new CourtEntity(0, "Court", surfaceEntity)).orElseThrow().getId();
 
         var res = repo.deleteCourt(id);
-        assertTrue(res.isEmpty());
+        assertTrue(res.isPresent());
+        assertTrue(res.get().isDeleted());
 
         var res2 = repo.deleteCourt(id);
         assertTrue(res2.isEmpty());
