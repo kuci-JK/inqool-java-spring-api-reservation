@@ -38,7 +38,7 @@ java -jar target/inQool-tennis-reservation-api-0.0.1-SNAPSHOT.jar data-init
 
 ## 4. Connect
 
-Api is available at `http://localhost:8080/api`
+Api is available at `http://localhost:8080/api/*`
 
 - surfaces: `http://localhost:8080/api/surfaces`
 - courts: `http://localhost:8080/api/courts`
