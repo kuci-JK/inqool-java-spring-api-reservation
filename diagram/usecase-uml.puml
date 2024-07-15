@@ -1,0 +1,74 @@
+@startuml
+
+
+!pragma ratio 0.80
+
+' skinparam linetype polyline
+' skinparam linetype ortho
+
+left to right direction
+
+' Style: (colors from https://sarafian.github.io/assets/images/posts/plantuml/2021-02-24-plantuml-tips-tricks-1/colors.svg)
+skinparam UsecaseBackgroundColor Plum
+skinparam RectangleBackgroundColor Thistle
+skinparam ActorBackgroundColor Turquoise
+
+' Actors:
+actor "User" as user
+actor "Court rental service manager" as manager
+
+' System boundary:
+rectangle "Tennis reservation" as system {
+    usecase "Get Reservation" as getReservation
+    usecase "Create reservation" as createReservation
+    usecase "Update reservation" as updateReservation
+    usecase "Delete reservation" as deleteReservation
+    usecase "List my reservations" as listMyReservations
+
+    usecase "List reservation for court" as listReservationsForCourt
+
+    usecase "Get court surface" as getCourtSurface
+    usecase "Create court surface" as createCourtSurface
+    usecase "Update court surface" as updateCourtSurface
+    usecase "Delete court surface" as deleteCourtSurface
+    usecase "List court surfaces" as listCourtSurfaces
+
+    usecase "Get court" as getCourt
+    usecase "Create court" as createCourt
+    usecase "Update court" as updateCourt
+    usecase "Delete court" as deleteCourt
+    usecase "List courts" as listCourts
+}
+
+user -- getReservation
+user -- createReservation
+user -- updateReservation
+user -- deleteReservation
+user -- listMyReservations
+user -- listReservationsForCourt
+user -- listCourts
+
+getCourt -- manager
+getCourtSurface -- manager
+listReservationsForCourt -- manager
+createCourtSurface -- manager
+updateCourtSurface -- manager
+deleteCourtSurface -- manager
+listCourtSurfaces -- manager
+createCourt -- manager
+updateCourt -- manager
+deleteCourt -- manager
+listCourts -- manager
+
+createCourtSurface -[hidden]- listCourtSurfaces
+createReservation -[hidden]- createCourt
+createReservation -[hidden]- createCourtSurface
+updateReservation -[hidden]- updateCourt
+updateReservation -[hidden]- updateCourtSurface
+deleteReservation -[hidden]- deleteCourt
+deleteReservation -[hidden]- deleteCourtSurface
+getReservation -[hidden]- getCourt
+getReservation -[hidden]- getCourtSurface
+
+
+@enduml
