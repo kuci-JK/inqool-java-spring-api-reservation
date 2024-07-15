@@ -1,0 +1,428 @@
+openapi: "3.1.0"
+info:
+  title: "Tennis reservation API"
+  description: "Tennis reservation API"
+  version: "0.0.1"
+servers:
+  - url: "http://localhost:8080"
+paths:
+  /api/surfaces:
+    get:
+      tags:
+        - "Surfaces"
+      summary: "GET api/surfaces"
+      operationId: "listSurfaces"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            'application/json':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/CourtSurfaceResponseDTO"
+    post:
+      tags:
+        - "Surfaces"
+      summary: "POST api/surfaces"
+      operationId: "createSurface"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CourtSurfaceModifyParams"
+        required: true
+      responses:
+        "201":
+          description: "Created"
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/CourtSurfaceResponseDTO"
+  /api/surfaces/{surfaceId}:
+    get:
+      tags:
+        - "Surfaces"
+      summary: "GET api/surfaces/{surfaceId}"
+      operationId: "getSurface"
+      parameters:
+        - name: "surfaceId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/CourtSurfaceResponseDTO"
+    put:
+      tags:
+        - "Surfaces"
+      summary: "PUT api/surfaces/{surfaceId}"
+      operationId: "updateSurface"
+      parameters:
+        - name: "surfaceId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CourtSurfaceModifyParams"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/CourtSurfaceResponseDTO"
+    delete:
+      tags:
+        - "Surfaces"
+      summary: "DELETE api/surfaces/{surfaceId}"
+      operationId: "deleteSurface"
+      parameters:
+        - name: "surfaceId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/CourtSurfaceResponseDTO"
+  /api/courts:
+    get:
+      tags:
+        - "Courts"
+      summary: "GET api/courts"
+      operationId: "listCourts"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            'application/json':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/CourtResponseDTO"
+    post:
+      tags:
+        - "Courts"
+      summary: "POST api/courts"
+      operationId: "createCourt"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CourtModifyParams"
+        required: true
+      responses:
+        "201":
+          description: "Created"
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/CourtResponseDTO"
+  /api/courts/{courtId}:
+    get:
+      tags:
+        - "Courts"
+      summary: "GET api/courts/{courtId}"
+      operationId: "getCourt"
+      parameters:
+        - name: "courtId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/CourtResponseDTO"
+    put:
+      tags:
+        - "Courts"
+      summary: "PUT api/courts/{courtId}"
+      operationId: "updateCourt"
+      parameters:
+        - name: "courtId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CourtModifyParams"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/CourtResponseDTO"
+    delete:
+      tags:
+        - "Courts"
+      summary: "DELETE api/courts/{courtId}"
+      operationId: "deleteCourt"
+      parameters:
+        - name: "courtId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/CourtResponseDTO"
+  /api/reservations:
+    get:
+      tags:
+        - "Reservations"
+      description: "Returns a list of reservations. You need to provide one of courtId or phone parameters."
+      summary: "GET api/reservations"
+      operationId: "listReservations"
+      parameters:
+        - name: "courtId"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "phone"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+        - name: "onlyFuture"
+          in: "query"
+          required: false
+          schema:
+            type: "boolean"
+            default: "false"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            'application/json':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/ReservationResponseDTO"
+    post:
+      tags:
+        - "Reservations"
+      summary: "POST api/reservations"
+      operationId: "createReservation"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReservationModifyParams"
+        required: true
+      responses:
+        "201":
+          description: "Created"
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/ReservationResponseDTO"
+  /api/reservations/{reservationId}:
+    get:
+      tags:
+        - "Reservations"
+      summary: "GET api/reservations/{reservationId}"
+      operationId: "getReservation"
+      parameters:
+        - name: "reservationId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/ReservationResponseDTO"
+    put:
+      tags:
+        - "Reservations"
+      summary: "PUT api/reservations/{reservationId}"
+      operationId: "updateReservation"
+      parameters:
+        - name: "reservationId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReservationModifyParams"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/ReservationResponseDTO"
+    delete:
+      tags:
+        - "Reservations"
+      summary: "DELETE api/reservations/{reservationId}"
+      operationId: "deleteReservation"
+      parameters:
+        - name: "reservationId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/ReservationResponseDTO"
+components:
+  schemas:
+    CourtSurfaceResponseDTO:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        surfaceName:
+          type: "string"
+        pricePerMinute:
+          type: "number"
+          format: "double"
+        deleted:
+          type: "boolean"
+    CourtSurfaceModifyParams:
+      type: "object"
+      properties:
+        surfaceName:
+          type: "string"
+        pricePerMinute:
+          type: "number"
+          format: "double"
+    CourtResponseDTO:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        courtName:
+          type: "string"
+        surface:
+          $ref: "#/components/schemas/CourtSurfaceResponseDTO"
+        deleted:
+          type: "boolean"
+    CourtModifyParams:
+      type: "object"
+      properties:
+        courtName:
+          type: "string"
+        courtSurfaceId:
+          type: "integer"
+          format: "int64"
+    UserResponseDTO:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        name:
+          type: "string"
+        phone:
+          type: "string"
+        deleted:
+          type: "boolean"
+    ReservationResponseDTO:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        created:
+          type: "string"
+          format: "date-time"
+        reservationStart:
+          type: "string"
+          format: "date-time"
+        reservationEnd:
+          type: "string"
+          format: "date-time"
+        gameType:
+          type: "string"
+          enum:
+            - "SINGLES"
+            - "DOUBLES"
+        price:
+          type: "number"
+          format: "double"
+        court:
+          $ref: "#/components/schemas/CourtResponseDTO"
+        customer:
+          $ref: "#/components/schemas/UserResponseDTO"
+        deleted:
+          type: "boolean"
+    UserModifyParams:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        phone:
+          type: "string"
+    ReservationModifyParams:
+      type: "object"
+      properties:
+        reservationStart:
+          type: "string"
+          format: "date-time"
+        reservationEnd:
+          type: "string"
+          format: "date-time"
+        gameType:
+          type: "string"
+          enum:
+            - "SINGLES"
+            - "DOUBLES"
+        courtId:
+          type: "integer"
+          format: "int64"
+        customer:
+          $ref: "#/components/schemas/UserModifyParams"
