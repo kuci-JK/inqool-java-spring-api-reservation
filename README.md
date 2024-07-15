@@ -16,6 +16,8 @@ git clone git@github.com:kuci-JK/inqool-java-spring-api-reservation.git
 
 ## 2. Build
 
+Outputs to ./target in project root
+
 ```sh
 ./mvnw package
 ```
