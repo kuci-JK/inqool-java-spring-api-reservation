@@ -1,6 +1,7 @@
 package com.example.inqooltennisreservationapi.model.mappers;
 
 import com.example.inqooltennisreservationapi.exceptions.EntityNotFoundException;
+import com.example.inqooltennisreservationapi.exceptions.InvalidRequestException;
 import com.example.inqooltennisreservationapi.model.api.ReservationDTOs;
 import com.example.inqooltennisreservationapi.model.entity.CourtEntity;
 import com.example.inqooltennisreservationapi.model.entity.ReservationEntity;
@@ -71,7 +72,7 @@ public class ReservationMapper {
 
         var user = userRepository.getUserByPhone(reservationModifyParams.getCustomer().getPhone());
         if (user.isPresent() && !user.get().getName().equals(reservationModifyParams.getCustomer().getName())) {
-            throw new RuntimeException("Invalid user data");
+            throw new InvalidRequestException("Invalid user data");
         }
 
         return getReservationEntity(reservationModifyParams, court.get(), user);
