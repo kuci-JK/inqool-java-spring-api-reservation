@@ -1,0 +1,486 @@
+@startuml
+
+!theme plain
+top to bottom direction
+skinparam linetype ortho
+
+entity ApiErrorDTO << record >> {
+  + ApiErrorDTO(HttpStatusCode, String, LocalDateTime): 
+  + ApiErrorDTO(HttpStatusCode, String): 
+  + timestamp(): LocalDateTime
+  + message(): String
+  + status(): HttpStatusCode
+}
+class CourtController {
+  + CourtController(CourtService): 
+  + updateCourt(long, CourtModifyParams): CourtResponseDTO
+  + deleteCourt(long): CourtResponseDTO
+  + getCourt(long): CourtResponseDTO
+  + listCourts(): List<CourtResponseDTO>
+  + createCourt(CourtModifyParams): CourtResponseDTO
+}
+class CourtDTOs {
+  + CourtDTOs(): 
+}
+class CourtEntity {
+  + CourtEntity(long, String, CourtSurfaceEntity): 
+  + CourtEntity(): 
+  + CourtEntity(String): 
+  - id: long
+  - name: String
+  - surface: CourtSurfaceEntity
+  + equals(Object): boolean
+  + hashCode(): int
+  + toString(): String
+  # canEqual(Object): boolean
+   name: String
+   surface: CourtSurfaceEntity
+   id: long
+}
+class CourtMapper {
+  + CourtMapper(CourtSurfaceRepository, CourtSurfaceMapper): 
+  + entityToResponseDto(CourtEntity): CourtResponseDTO
+  + dtoToEntity(CourtModifyParams): CourtEntity
+}
+class CourtModifyParams {
+  + CourtModifyParams(String, long): 
+  + CourtModifyParams(): 
+  - courtName: String
+  - courtSurfaceId: long
+  + equals(Object): boolean
+  + hashCode(): int
+  + toString(): String
+  # canEqual(Object): boolean
+   courtSurfaceId: long
+   courtName: String
+}
+interface CourtRepository << interface >> {
+  + listCourtsForSurface(long): List<CourtEntity>
+  + createCourt(CourtEntity): Optional<CourtEntity>
+  + deleteCourt(long): Optional<CourtEntity>
+  + listCourts(): List<CourtEntity>
+  + updateCourt(long, CourtEntity): Optional<CourtEntity>
+  + getCourtById(long): Optional<CourtEntity>
+}
+class CourtRepositoryImpl {
+  + CourtRepositoryImpl(ReservationRepository): 
+  + createCourt(CourtEntity): Optional<CourtEntity>
+  + deleteCourt(long): Optional<CourtEntity>
+  + listCourtsForSurface(long): List<CourtEntity>
+  + getCourtById(long): Optional<CourtEntity>
+  + listCourts(): List<CourtEntity>
+  + updateCourt(long, CourtEntity): Optional<CourtEntity>
+}
+class CourtResponseDTO {
+  + CourtResponseDTO(long, String, CourtSurfaceResponseDTO, boolean): 
+  + CourtResponseDTO(): 
+  - courtName: String
+  - deleted: boolean
+  - id: long
+  - surface: CourtSurfaceResponseDTO
+  + hashCode(): int
+  + toString(): String
+  + equals(Object): boolean
+  # canEqual(Object): boolean
+   courtName: String
+   surface: CourtSurfaceResponseDTO
+   deleted: boolean
+   id: long
+}
+interface CourtService << interface >> {
+  + createCourt(CourtModifyParams): CourtResponseDTO
+  + deleteCourt(long): CourtResponseDTO
+  + getCourt(long): CourtResponseDTO
+  + editCourt(long, CourtModifyParams): CourtResponseDTO
+   allCourts: List<CourtResponseDTO>
+}
+class CourtServiceImpl {
+  + CourtServiceImpl(CourtRepository, CourtMapper): 
+  + editCourt(long, CourtModifyParams): CourtResponseDTO
+  + createCourt(CourtModifyParams): CourtResponseDTO
+  + getCourt(long): CourtResponseDTO
+  + deleteCourt(long): CourtResponseDTO
+  # courtExists(long): boolean
+   allCourts: List<CourtResponseDTO>
+}
+class CourtSurfaceDTOs {
+  + CourtSurfaceDTOs(): 
+}
+class CourtSurfaceEntity {
+  + CourtSurfaceEntity(): 
+  + CourtSurfaceEntity(long, String, double): 
+  + CourtSurfaceEntity(String): 
+  - pricePerMinute: double
+  - id: long
+  - surfaceName: String
+  + equals(Object): boolean
+  + toString(): String
+  + hashCode(): int
+  # canEqual(Object): boolean
+   pricePerMinute: double
+   id: long
+   surfaceName: String
+}
+class CourtSurfaceMapper {
+  + CourtSurfaceMapper(): 
+  + entityToResponseDto(CourtSurfaceEntity): CourtSurfaceResponseDTO
+  + dtoToEntity(CourtSurfaceModifyParams): CourtSurfaceEntity
+}
+class CourtSurfaceModifyParams {
+  + CourtSurfaceModifyParams(String, double): 
+  + CourtSurfaceModifyParams(): 
+  - surfaceName: String
+  - pricePerMinute: double
+  + equals(Object): boolean
+  + hashCode(): int
+  + toString(): String
+  # canEqual(Object): boolean
+   pricePerMinute: double
+   surfaceName: String
+}
+interface CourtSurfaceRepository << interface >> {
+  + deleteCourtSurface(long): Optional<CourtSurfaceEntity>
+  + listCourtSurfaces(): List<CourtSurfaceEntity>
+  + getCourtSurfaceById(long): Optional<CourtSurfaceEntity>
+  + createCourtSurface(CourtSurfaceEntity): Optional<CourtSurfaceEntity>
+  + updateCourtSurface(long, CourtSurfaceEntity): Optional<CourtSurfaceEntity>
+}
+class CourtSurfaceRepositoryImpl {
+  + CourtSurfaceRepositoryImpl(CourtRepository): 
+  + deleteCourtSurface(long): Optional<CourtSurfaceEntity>
+  + listCourtSurfaces(): List<CourtSurfaceEntity>
+  + getCourtSurfaceById(long): Optional<CourtSurfaceEntity>
+  + createCourtSurface(CourtSurfaceEntity): Optional<CourtSurfaceEntity>
+  + updateCourtSurface(long, CourtSurfaceEntity): Optional<CourtSurfaceEntity>
+}
+class CourtSurfaceResponseDTO {
+  + CourtSurfaceResponseDTO(long, String, double, boolean): 
+  + CourtSurfaceResponseDTO(): 
+  - id: long
+  - deleted: boolean
+  - pricePerMinute: double
+  - surfaceName: String
+  + toString(): String
+  + equals(Object): boolean
+  + hashCode(): int
+  # canEqual(Object): boolean
+   surfaceName: String
+   deleted: boolean
+   pricePerMinute: double
+   id: long
+}
+interface CourtSurfaceService << interface >> {
+  + getSurface(long): CourtSurfaceResponseDTO
+  + deleteSurface(long): CourtSurfaceResponseDTO
+  + editSurface(long, CourtSurfaceModifyParams): CourtSurfaceResponseDTO
+  + createSurface(CourtSurfaceModifyParams): CourtSurfaceResponseDTO
+   allSurfaces: List<CourtSurfaceResponseDTO>
+}
+class CourtSurfaceServiceImpl {
+  + CourtSurfaceServiceImpl(CourtSurfaceRepository, CourtSurfaceMapper): 
+  + getSurface(long): CourtSurfaceResponseDTO
+  + deleteSurface(long): CourtSurfaceResponseDTO
+  + createSurface(CourtSurfaceModifyParams): CourtSurfaceResponseDTO
+  + editSurface(long, CourtSurfaceModifyParams): CourtSurfaceResponseDTO
+  # surfaceExists(long): boolean
+   allSurfaces: List<CourtSurfaceResponseDTO>
+}
+class DataInitializationFailed {
+  + DataInitializationFailed(): 
+}
+class DatabaseException {
+  + DatabaseException(): 
+  + DatabaseException(String): 
+}
+class EntityNotFoundException {
+  + EntityNotFoundException(): 
+  + EntityNotFoundException(String): 
+}
+class ExceptionWithMessagePrefix {
+  + ExceptionWithMessagePrefix(String, String): 
+  + ExceptionWithMessagePrefix(String): 
+  - applyMessagePrefix(String, String): String
+}
+class ExternalConfig {
+  + ExternalConfig(): 
+  + dataInitRunner(CourtService, CourtSurfaceService): CommandLineRunner
+}
+enum GameType << enumeration >> {
+  - GameType(double): 
+  - priceMultiplier: double
+  + values(): GameType[]
+  + valueOf(String): GameType
+   priceMultiplier: double
+}
+class InQoolTennisReservationApiApplication {
+  + InQoolTennisReservationApiApplication(): 
+  + main(String[]): void
+}
+class InvalidRequestException {
+  + InvalidRequestException(): 
+  + InvalidRequestException(String): 
+}
+interface RepositoryForSoftDeletableEntity << interface >> {
+  + entityNotDeletetPredicate(CriteriaBuilder, Root<T>): Predicate
+  + entityExists(EntityManager, Class<T>, Object): boolean
+}
+class ReservationController {
+  + ReservationController(ReservationService): 
+  + listReservations(Optional<Long>, Optional<String>, boolean): List<ReservationResponseDTO>
+  + createReservation(ReservationModifyParams): ReservationResponseDTO
+  + updateReservation(long, ReservationModifyParams): ReservationResponseDTO
+  + deleteReservation(Long): ReservationResponseDTO
+  + getReservation(long): ReservationResponseDTO
+}
+class ReservationDTOs {
+  + ReservationDTOs(): 
+}
+class ReservationEntity {
+  + ReservationEntity(): 
+  + ReservationEntity(long, LocalDateTime, LocalDateTime, LocalDateTime, GameType, CourtEntity, UserEntity): 
+  + ReservationEntity(LocalDateTime, LocalDateTime, LocalDateTime, GameType): 
+  - userEntity: UserEntity
+  - id: long
+  - reservationEnd: LocalDateTime
+  - reservedCourtEntity: CourtEntity
+  - gameType: GameType
+  - createdDate: LocalDateTime
+  - reservationStart: LocalDateTime
+  + equals(Object): boolean
+  + hashCode(): int
+  + toString(): String
+  # canEqual(Object): boolean
+   userEntity: UserEntity
+   createdDate: LocalDateTime
+   reservationStart: LocalDateTime
+   reservationEnd: LocalDateTime
+   gameType: GameType
+   reservedCourtEntity: CourtEntity
+   totalPrice: double
+   id: long
+}
+class ReservationMapper {
+  + ReservationMapper(CourtMapper, CourtRepository, UserMapper, UserRepository): 
+  + dtoToEntity(ReservationModifyParams): ReservationEntity
+  + entityToResponseDto(ReservationEntity): ReservationResponseDTO
+  - getReservationEntity(ReservationModifyParams, CourtEntity, Optional<UserEntity>): ReservationEntity
+}
+class ReservationModifyParams {
+  + ReservationModifyParams(LocalDateTime, LocalDateTime, GameType, long, UserModifyParams): 
+  + ReservationModifyParams(): 
+  - reservationStart: LocalDateTime
+  - reservationEnd: LocalDateTime
+  - gameType: GameType
+  - courtId: long
+  - customer: UserModifyParams
+  + toString(): String
+  + hashCode(): int
+  + equals(Object): boolean
+  # canEqual(Object): boolean
+   reservationEnd: LocalDateTime
+   courtId: long
+   gameType: GameType
+   reservationStart: LocalDateTime
+   customer: UserModifyParams
+}
+interface ReservationRepository << interface >> {
+  + updateReservation(long, ReservationEntity): Optional<ReservationEntity>
+  + getReservationById(long): Optional<ReservationEntity>
+  + overlapsExistingReservations(long, LocalDateTime, LocalDateTime, Optional<Long>): boolean
+  + listReservations(long, boolean): List<ReservationEntity>
+  + listReservations(String, boolean): List<ReservationEntity>
+  + deleteReservation(long): Optional<ReservationEntity>
+  + createReservation(ReservationEntity): Optional<ReservationEntity>
+}
+class ReservationRepositoryImpl {
+  + ReservationRepositoryImpl(): 
+  + createReservation(ReservationEntity): Optional<ReservationEntity>
+  + getReservationById(long): Optional<ReservationEntity>
+  + listReservations(long, boolean): List<ReservationEntity>
+  + updateReservation(long, ReservationEntity): Optional<ReservationEntity>
+  + deleteReservation(long): Optional<ReservationEntity>
+  + listReservations(String, boolean): List<ReservationEntity>
+  + overlapsExistingReservations(long, LocalDateTime, LocalDateTime, Optional<Long>): boolean
+  # listReservations(Optional<Long>, Optional<String>, boolean): List<ReservationEntity>
+}
+class ReservationResponseDTO {
+  + ReservationResponseDTO(): 
+  + ReservationResponseDTO(long, LocalDateTime, LocalDateTime, LocalDateTime, GameType, double, CourtResponseDTO, UserResponseDTO, boolean): 
+  - price: double
+  - id: long
+  - deleted: boolean
+  - reservationEnd: LocalDateTime
+  - customer: UserResponseDTO
+  - gameType: GameType
+  - created: LocalDateTime
+  - reservationStart: LocalDateTime
+  - court: CourtResponseDTO
+  + hashCode(): int
+  + equals(Object): boolean
+  + toString(): String
+  # canEqual(Object): boolean
+   deleted: boolean
+   customer: UserResponseDTO
+   reservationStart: LocalDateTime
+   price: double
+   court: CourtResponseDTO
+   created: LocalDateTime
+   reservationEnd: LocalDateTime
+   gameType: GameType
+   id: long
+}
+interface ReservationService << interface >> {
+  + editReservation(long, ReservationModifyParams): ReservationResponseDTO
+  + getReservation(long): ReservationResponseDTO
+  + getReservationsForUser(String, boolean): List<ReservationResponseDTO>
+  + getReservationsOnCourt(long, boolean): List<ReservationResponseDTO>
+  + createReservation(ReservationModifyParams): ReservationResponseDTO
+  + deleteReservation(long): ReservationResponseDTO
+}
+class ReservationServiceImpl {
+  + ReservationServiceImpl(ReservationRepository, ReservationMapper, ReservationValidator): 
+  + createReservation(ReservationModifyParams): ReservationResponseDTO
+  + getReservationsOnCourt(long, boolean): List<ReservationResponseDTO>
+  + getReservation(long): ReservationResponseDTO
+  + deleteReservation(long): ReservationResponseDTO
+  + getReservationsForUser(String, boolean): List<ReservationResponseDTO>
+  + editReservation(long, ReservationModifyParams): ReservationResponseDTO
+  # reservationExists(long): boolean
+}
+interface ReservationValidator << interface >> {
+  + validateReservationRequest(Optional<Long>, ReservationModifyParams): void
+}
+class ReservationValidatorImpl {
+  + ReservationValidatorImpl(ReservationRepository, UserValidator): 
+  + validateReservationRequest(Optional<Long>, ReservationModifyParams): void
+  - validateDateInterval(ReservationModifyParams): void
+}
+class RestExceptionHandler {
+  + RestExceptionHandler(): 
+  # handleNoResourceFoundException(NoResourceFoundException, HttpHeaders, HttpStatusCode, WebRequest): ResponseEntity<Object>?
+  # handleMissingPathVariable(MissingPathVariableException, HttpHeaders, HttpStatusCode, WebRequest): ResponseEntity<Object>?
+  # handleInvalidRequest(InvalidRequestException): ResponseEntity<Object>
+  # handleHttpMessageNotReadable(HttpMessageNotReadableException, HttpHeaders, HttpStatusCode, WebRequest): ResponseEntity<Object>?
+  # handleConstraintViolationException(ConstraintViolationException): ResponseEntity<Object>
+  # handleMethodValidationException(MethodValidationException, HttpHeaders, HttpStatus, WebRequest): ResponseEntity<Object>?
+  # handleConversionNotSupported(ConversionNotSupportedException, HttpHeaders, HttpStatusCode, WebRequest): ResponseEntity<Object>?
+  # handleMethodArgumentNotValid(MethodArgumentNotValidException, HttpHeaders, HttpStatusCode, WebRequest): ResponseEntity<Object>?
+  # handleEntityNotFound(EntityNotFoundException): ResponseEntity<Object>
+  # handleDataAccessException(DatabaseException): ResponseEntity<Object>
+  # handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException, HttpHeaders, HttpStatusCode, WebRequest): ResponseEntity<Object>?
+  - buildResponseEntity(ApiErrorDTO): ResponseEntity<Object>
+  - getResponseEntityFromException(Exception, HttpStatusCode): ResponseEntity<Object>
+  - getResponseEntity(String, HttpStatusCode): ResponseEntity<Object>
+}
+class SoftDeletableEntity {
+  + SoftDeletableEntity(boolean): 
+  + SoftDeletableEntity(): 
+  - deleted: boolean
+  + equals(Object): boolean
+  + hashCode(): int
+  + toString(): String
+  # canEqual(Object): boolean
+   deleted: boolean
+}
+class SurfaceController {
+  + SurfaceController(CourtSurfaceService): 
+  + updateSurface(long, CourtSurfaceModifyParams): CourtSurfaceResponseDTO
+  + createSurface(CourtSurfaceModifyParams): CourtSurfaceResponseDTO
+  + getSurface(long): CourtSurfaceResponseDTO
+  + listSurfaces(): List<CourtSurfaceResponseDTO>
+  + deleteSurface(long): CourtSurfaceResponseDTO
+}
+class UserDTOs {
+  + UserDTOs(): 
+}
+class UserEntity {
+  + UserEntity(long, String, String): 
+  + UserEntity(): 
+  + UserEntity(String, String): 
+  - name: String
+  - phone: String
+  - id: long
+  + equals(Object): boolean
+  + toString(): String
+  + hashCode(): int
+  # canEqual(Object): boolean
+   name: String
+   phone: String
+   id: long
+}
+class UserMapper {
+  + UserMapper(): 
+  + entityToResponseDto(UserEntity): UserResponseDTO
+}
+class UserModifyParams {
+  + UserModifyParams(String, String): 
+  + UserModifyParams(): 
+  - name: String
+  - phone: String
+  + equals(Object): boolean
+  + hashCode(): int
+  + toString(): String
+  # canEqual(Object): boolean
+   name: String
+   phone: String
+}
+interface UserRepository << interface >> {
+  + getUserByPhone(String): Optional<UserEntity>
+}
+class UserRepositoryImpl {
+  + UserRepositoryImpl(): 
+  + getUserByPhone(String): Optional<UserEntity>
+}
+class UserResponseDTO {
+  + UserResponseDTO(long, String, String, boolean): 
+  + UserResponseDTO(): 
+  - id: long
+  - phone: String
+  - deleted: boolean
+  - name: String
+  + hashCode(): int
+  + equals(Object): boolean
+  + toString(): String
+  # canEqual(Object): boolean
+   name: String
+   deleted: boolean
+   phone: String
+   id: long
+}
+interface UserValidator << interface >> {
+  + validateUserDataMatchOrUserNotExists(UserModifyParams): void
+}
+class UserValidatorImpl {
+  + UserValidatorImpl(UserRepository): 
+  + validateUserDataMatchOrUserNotExists(UserModifyParams): void
+}
+
+CourtEntity                            -[#000082,plain]-^  SoftDeletableEntity                   
+CourtModifyParams                      +-[#820000,plain]-  CourtDTOs                             
+CourtRepository                        -[#008200,plain]-^  RepositoryForSoftDeletableEntity      
+CourtRepositoryImpl                    -[#008200,dashed]-^  CourtRepository                       
+CourtResponseDTO                       +-[#820000,plain]-  CourtDTOs                             
+CourtServiceImpl                       -[#008200,dashed]-^  CourtService                          
+CourtSurfaceEntity                     -[#000082,plain]-^  SoftDeletableEntity                   
+CourtSurfaceModifyParams               +-[#820000,plain]-  CourtSurfaceDTOs                      
+CourtSurfaceRepository                 -[#008200,plain]-^  RepositoryForSoftDeletableEntity      
+CourtSurfaceRepositoryImpl             -[#008200,dashed]-^  CourtSurfaceRepository                
+CourtSurfaceResponseDTO                +-[#820000,plain]-  CourtSurfaceDTOs                      
+CourtSurfaceServiceImpl                -[#008200,dashed]-^  CourtSurfaceService                   
+DatabaseException                      -[#000082,plain]-^  ExceptionWithMessagePrefix            
+EntityNotFoundException                -[#000082,plain]-^  ExceptionWithMessagePrefix            
+InvalidRequestException                -[#000082,plain]-^  ExceptionWithMessagePrefix            
+ReservationEntity                      -[#000082,plain]-^  SoftDeletableEntity                   
+ReservationModifyParams                +-[#820000,plain]-  ReservationDTOs                       
+ReservationRepository                  -[#008200,plain]-^  RepositoryForSoftDeletableEntity      
+ReservationRepositoryImpl              -[#008200,dashed]-^  ReservationRepository                 
+ReservationResponseDTO                 +-[#820000,plain]-  ReservationDTOs                       
+ReservationServiceImpl                 -[#008200,dashed]-^  ReservationService                    
+ReservationValidatorImpl               -[#008200,dashed]-^  ReservationValidator                  
+UserEntity                             -[#000082,plain]-^  SoftDeletableEntity                   
+UserModifyParams                       +-[#820000,plain]-  UserDTOs                              
+UserRepository                         -[#008200,plain]-^  RepositoryForSoftDeletableEntity      
+UserRepositoryImpl                     -[#008200,dashed]-^  UserRepository                        
+UserResponseDTO                        +-[#820000,plain]-  UserDTOs                              
+UserValidatorImpl                      -[#008200,dashed]-^  UserValidator                         
+@enduml
