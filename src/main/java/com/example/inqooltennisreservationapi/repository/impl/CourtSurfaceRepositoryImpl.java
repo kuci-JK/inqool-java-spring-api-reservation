@@ -59,7 +59,7 @@ public class CourtSurfaceRepositoryImpl implements CourtSurfaceRepository {
         }
 
         courtSurfaceEntity.setDeleted(true);
-        return updateCourtSurface(id, courtSurfaceEntity);
+        return Optional.ofNullable(entityManager.merge(courtSurfaceEntity));
     }
 
     @Override

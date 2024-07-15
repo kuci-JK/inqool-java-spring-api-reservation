@@ -62,7 +62,7 @@ public class CourtRepositoryImpl implements CourtRepository {
         }
 
         existing.setDeleted(true);
-        return updateCourt(id, existing);
+        return Optional.ofNullable(entityManager.merge(existing));
     }
 
     @Override

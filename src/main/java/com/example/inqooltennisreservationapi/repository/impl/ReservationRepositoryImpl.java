@@ -52,7 +52,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
             return Optional.empty();
         }
         existingReservation.setDeleted(true);
-        return updateReservation(id, existingReservation);
+        return Optional.ofNullable(entityManager.merge(existingReservation));
     }
 
     @Override
