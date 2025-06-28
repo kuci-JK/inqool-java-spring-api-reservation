@@ -1,3 +1,6 @@
+# UPDATES
+**28.6.2025**: I am archiving this repository.
+
 # REST API Court reservation
 
 ## 1. Get source code
